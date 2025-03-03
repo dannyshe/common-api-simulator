@@ -7,6 +7,11 @@ spring:
     url: jdbc:mysql://local.middleware.com:3306/channel_mock?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
     username: root
     password: 0077
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      max-lifetime: 10000
   redis:
     timeout: 50000ms
     lettuce:
