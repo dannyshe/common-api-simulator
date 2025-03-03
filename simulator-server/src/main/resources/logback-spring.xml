@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2018 PHOENIXFIN PTE. LTD.
+  -->
+
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+    <springProperty scope="context" name="logPath" source="logging.file.path" defaultValue="logs" />
+    <property name="LOG_PATH" value="${logPath}" default="" />
+
+    <property name="COMMON_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p ${PID:- } --- [%t] [${springAppName},%X{X-UserId:-},%X{X-TraceId:-},%X{X-SpanId:-}] %logger - %m%n"/>
+
+    <!-- [公共Appender] 控制台STDOUT -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%magenta(%d{yyyy-MM-dd HH:mm:ss.SSS}) %highlight(%-5p) %green(${PID:- } --- [%t]) [${springAppName},%X{X-UserId:-},%X{X-TraceId:-},%X{X-SpanId:-}] %cyan(%logger) - %m %n
+            </pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/common-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/common-error.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="BIZ-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/common-biz.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/common-biz.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FACADE-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/facade-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/facade-digest.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FACADE-DIGEST-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="FACADE-DIGEST-APPENDER"/>
+    </appender>
+
+    <appender name="FACADE-INFO-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/facade-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/facade-info.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="FACADE-INFO-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="FACADE-INFO-APPENDER"/>
+    </appender>
+
+    <appender name="INTEGRATION-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/integration-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/integration-digest.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+
+    <appender name="INTEGRATION-DIGEST-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="INTEGRATION-DIGEST-APPENDER"/>
+    </appender>
+
+    <appender name="INTEGRATION-INFO-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/integration-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/integration-info.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="INTEGRATION-INFO-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="INTEGRATION-INFO-APPENDER"/>
+    </appender>
+
+    <appender name="SERVICE-INFO-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/service-info.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/service-info.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>7</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE-INFO-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="SERVICE-INFO-APPENDER"/>
+    </appender>
+
+    <appender name="SERVICE-DIGEST-APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/service-digest.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/service-digest.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <!-- 每个文件最大100M，保留30天历史记录，但所有文件总大小不超过20G -->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${COMMON_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="SERVICE-DIGEST-APPENDER-ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>64</queueSize>
+        <neverBlock>true</neverBlock>
+        <appender-ref ref="SERVICE-DIGEST-APPENDER"/>
+    </appender>
+
+    <logger name="io.jaegertracing" level="WARN" additivity="false">
+        <appender-ref ref="BIZ-APPENDER"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="FACADE_DIGEST" level="INFO" additivity="false">
+        <appender-ref ref="FACADE-DIGEST-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="FACADE-INFO" level="INFO" additivity="false">
+        <appender-ref ref="FACADE-INFO-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="SERVICE-INFO" level="INFO" additivity="false">
+        <appender-ref ref="SERVICE-INFO-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="SERVICE-DIGEST" level="INFO" additivity="false">
+        <appender-ref ref="SERVICE-DIGEST-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="INTEGRATION-DIGEST" level="INFO" additivity="false">
+        <appender-ref ref="INTEGRATION-DIGEST-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+
+    <logger name="INTEGRATION-INFO" level="INFO" additivity="false">
+        <appender-ref ref="INTEGRATION-INFO-APPENDER-ASYNC"/>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ERROR-APPENDER"/>
+        <appender-ref ref="BIZ-APPENDER"/>
+    </root>
+
+</configuration>
+

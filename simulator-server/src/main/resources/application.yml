@@ -1,0 +1,74 @@
+rootArtifactId: CHANNEL-MOCK
+
+spring:
+  application:
+    name: ${rootArtifactId}
+  datasource:
+    url: jdbc:mysql://middleware.siupay.com:3306/channel_mock?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    username: root
+    password: 0077
+  redis:
+    timeout: 50000ms
+    lettuce:
+      pool:
+        max-active:  16 # 连接池最大连接数（使用负值表示没有限制）
+        max-idle: 8 # 连接池中的最大空闲连接
+        min-idle: 2 # 连接池中的最小空闲连接
+        max-wait: 50000ms
+    database: 0
+    host: middleware.siupay.com
+    port: 6379
+  security:
+    user:
+      name: admin
+      password: 123
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+  mvc:
+    async:
+      request-timeout: 10
+
+  main:
+    #允许存在多个Feign调用相同Service的接口
+    allow-bean-definition-overriding: true
+
+logging:
+  file:
+    path: ${user.home}/logs/${rootArtifactId}
+  level:
+    com.payment.simulator: INFO
+
+
+server:
+  port: 10051
+  tomcat:
+    max-threads: 800
+    min-spare-threads: 200
+    accesslog:
+      enabled: true
+      rotate: true
+      directory: ${logging.path}
+
+management:
+  security:
+    enabled: true
+  endpoints:
+    jmx:
+      exposure:
+        include: info, health, prometheus
+    web:
+      exposure:
+        include: info, health, prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.payment.simulator.server.entity
+  #开启驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
