@@ -4,7 +4,7 @@ spring:
   application:
     name: ${rootArtifactId}
   datasource:
-    url: jdbc:mysql://middleware.siupay.com:3306/channel_mock?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+    url: jdbc:mysql://local.middleware.com:3306/channel_mock?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
     username: root
     password: 0077
   redis:
@@ -16,7 +16,7 @@ spring:
         min-idle: 2 # 连接池中的最小空闲连接
         max-wait: 50000ms
     database: 0
-    host: middleware.siupay.com
+    host: local.middleware.com
     port: 6379
   security:
     user:
