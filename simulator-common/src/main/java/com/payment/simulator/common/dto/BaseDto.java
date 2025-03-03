@@ -12,7 +12,7 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 /**
  * DTO基类
  *
- * @author Grayson
+ * @author Danny She
  * @createTime 2021-11-01
  */
 public class BaseDto implements Serializable {

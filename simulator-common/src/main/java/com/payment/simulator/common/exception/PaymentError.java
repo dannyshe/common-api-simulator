@@ -6,7 +6,7 @@ import com.payment.simulator.common.enums.PaymentSystem;
 /**
  * 支付系统错误
  *
- * @author Grayson
+ * @author Danny She
  * @createTime 2021-11-01
  */
 

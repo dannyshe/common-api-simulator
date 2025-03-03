@@ -5,7 +5,7 @@ import com.payment.simulator.common.enums.PaymentSystem;
 /**
  * 支付异常父类
  *
- * @author Grayson
+ * @author Danny She
  * @createTime 2021-11-01
  */
 public class PaymentException extends RuntimeException{
