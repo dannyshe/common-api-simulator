@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 /**
  * 描述信息
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 public class IPUtils {
@@ -53,7 +53,6 @@ public class IPUtils {
     /**
      * @func 获得本机的机器名称，用来从配置文件中排除本机
      * @desc 在此添加实现相关说明
-     * @author zhangfeng
      * @version 4.0.0.0
      */
     public static String getLocalHostName() {
@@ -69,7 +68,6 @@ public class IPUtils {
     /**
      * #func 返回主机名的全限定域名<br>
      *
-     * @author v_dongguoshuang
      * @version 4.0.0
      */
     public static String getFullyLocalHostName() {
@@ -93,7 +91,6 @@ public class IPUtils {
     /**
      * #func 返回本机IP<br>
      *
-     * @author v_dongguoshuang
      * @version 4.0.0
      */
     public static String getLocalHostAddress() {
@@ -110,7 +107,6 @@ public class IPUtils {
     /**
      * #func 判断本机是否和传入的域名一致<br>
      *
-     * @author v_dongguoshuang
      * @version 4.0.0
      */
     public static boolean isDomainEqualsLocal(String domainName) {

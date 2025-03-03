@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * 描述信息
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 public enum AccountTypeEnum {

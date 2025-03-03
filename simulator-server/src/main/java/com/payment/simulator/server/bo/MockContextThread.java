@@ -4,7 +4,7 @@ package com.payment.simulator.server.bo;
 import com.payment.simulator.server.util.ThreadLocalUtil;
 
 /**
- * @author Danny
+ * 
  * @version 0.0.1
  * @date 2022/04/06
  */

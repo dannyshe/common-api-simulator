@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * xml工具类
- * @author Danny
+ * 
  * @date 2016-09-13
  */
 public class XmlTool {

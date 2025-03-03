@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import lombok.Data;
 
 /**
- * @author minn
+ * 
  * @description
  * @date 2021/12/28
  */

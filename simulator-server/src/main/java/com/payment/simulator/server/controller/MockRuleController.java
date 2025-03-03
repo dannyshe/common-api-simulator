@@ -34,7 +34,7 @@ import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 
 /**
  * @description:
- * @author: Danny
+ * 
  **/
 @RestController
 @Slf4j

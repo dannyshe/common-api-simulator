@@ -4,7 +4,7 @@ import com.payment.simulator.server.bo.MockContext;
 import org.springframework.http.ResponseEntity;
 
 /**
- * @author Danny
+ * 
  * @version 0.0.1
  * @date 2022/04/06
  */

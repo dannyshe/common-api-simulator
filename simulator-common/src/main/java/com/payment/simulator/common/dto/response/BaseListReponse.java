@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * DTO基类
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 public class BaseListReponse<T> extends BaseDto {

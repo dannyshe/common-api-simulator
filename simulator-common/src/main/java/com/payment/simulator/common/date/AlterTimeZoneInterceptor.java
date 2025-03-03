@@ -11,7 +11,6 @@ import java.util.Properties;
 /**
  * 描述信息
  *
- * @author nevin
  * @createTime 2021-12-15
  */
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})

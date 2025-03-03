@@ -1,7 +1,6 @@
 package com.payment.simulator.common.idgenerator;
 
 /**
- * @author: ywainlan
  * @date: 2022/5/16
  * @Description:
  */

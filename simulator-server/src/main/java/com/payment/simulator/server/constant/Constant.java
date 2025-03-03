@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 /**
  * @description: constant
- * @author: Danny
+ * 
  **/
 @UtilityClass
 public class Constant {

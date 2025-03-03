@@ -2,7 +2,6 @@ package com.payment.simulator.common.idgenerator;
 
 import org.apache.commons.lang3.StringUtils;
 /**
- * @author: ywainlan
  * @date: 2022/5/16
  * @Description:
  */

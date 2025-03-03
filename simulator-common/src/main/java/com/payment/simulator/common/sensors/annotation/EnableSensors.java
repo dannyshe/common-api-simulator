@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 import com.payment.simulator.common.sensors.SensorsConfiguration;
 
 /**
- * @author minn
+ * 
  * @description
  * @date 2022/3/16
  */

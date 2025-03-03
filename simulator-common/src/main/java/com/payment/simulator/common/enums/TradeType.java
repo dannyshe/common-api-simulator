@@ -6,7 +6,6 @@ import lombok.Getter;
 /**
  * 交易类型枚举
  *
- * @author Sucre
  * @date 2021年12月03日
  */
 @AllArgsConstructor

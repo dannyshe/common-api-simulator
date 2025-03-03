@@ -10,7 +10,6 @@ import java.security.spec.X509EncodedKeySpec;
 
 /**
  * @description RSA 2048 encrypt and decrypt
- * @author nevin
  * @date 2021-12-31
  */
 public class RSAEncryptDecrypt {

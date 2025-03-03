@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
- * @author Danny
+ * 
  * @version 0.0.1
  * @date 2022/04/06
  */

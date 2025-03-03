@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 /**
  * 描述信息
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 public class UserIdGenerator {

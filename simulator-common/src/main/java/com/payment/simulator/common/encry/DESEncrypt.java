@@ -14,7 +14,7 @@ import java.security.SecureRandom;
 /**
  * 描述信息
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 public class DESEncrypt implements StringEncryptor {

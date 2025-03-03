@@ -16,7 +16,7 @@ import com.payment.simulator.common.utils.BeanUtils;
 
 /**
  * @description:
- * @author: Danny
+ * 
  **/
 @RestController
 @Slf4j

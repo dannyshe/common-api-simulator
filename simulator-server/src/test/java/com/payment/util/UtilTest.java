@@ -13,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 /**
  * 工具类ut
  *
- * @author Danny
+ * 
  * @date 2016-09-13
  */
 

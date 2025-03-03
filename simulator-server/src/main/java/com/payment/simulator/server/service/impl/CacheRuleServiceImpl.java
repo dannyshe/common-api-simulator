@@ -23,7 +23,7 @@ import static com.payment.simulator.common.exception.ErrorCode.PARAM_ERROR;
 import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 
 /**
- * @author Danny
+ * 
  * @version 0.0.1
  * @date 2022/03/31
  */

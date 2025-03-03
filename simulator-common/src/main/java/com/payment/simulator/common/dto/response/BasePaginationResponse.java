@@ -8,7 +8,7 @@ import lombok.Data;
 /**
  * DTO基类
  *
- * @author Danny She
+ * 
  * @createTime 2021-11-01
  */
 @Data
