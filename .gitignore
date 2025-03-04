@@ -16,6 +16,8 @@ LOG_PATH_IS_UNDEFINED/
 *.iml
 *.ipr
 
+.gradle
+
 ### NetBeans ###
 nbproject/private/
 build/
