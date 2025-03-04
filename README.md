@@ -1,4 +1,10 @@
-# Background
+# Common Api Simulator
+
+## Design
+
+![overall](./design/0.png)
+
+## Background
 
 When developing a payment gateway system, we can leverage sandbox environments from external payment service providers (e.g., Checkout or Stripe) during the development phase. However, several limitations emerge when relying on these external sandbox payment environments:
 
@@ -7,7 +13,7 @@ When developing a payment gateway system, we can leverage sandbox environments f
 - **Unreliable Availability**: Compared to production environments, sandbox payment systems exhibit lower stability. If our integration tests or automated test workflows depend on consistent responses from sandbox environments, intermittent failures may cause test case errors and disrupt CI/CD pipelines.
   To address these challenges, we propose this API simulator tool as a technical alternative to external payment service providers. It is specifically designed to resolve the aforementioned limitations while maintaining full compatibility with standard payment workflows.
 
-# Functionalities
+## Functionalities
 
 - **Seamless Integration**
 
@@ -45,19 +51,15 @@ When developing a payment gateway system, we can leverage sandbox environments f
     - **Load Balancing**:
       - Employs NGINX as a load balancer to distribute traffic efficiently and ensure high availability.
 
-# Overall Design
-
-![overall](./design/0.png)
-
-# Usecase
+## Usecase
 
 ![usecase](./design/1.png)
 
-# Sequence
+## Sequence
 
 ![sequence](./design/3.png)
 
-# Databse
+## Database
 
 ### 1. Simulate Rule Table: `simulate_rule`
 
@@ -108,14 +110,14 @@ When developing a payment gateway system, we can leverage sandbox environments f
 
 ---
 
-# API
+## API
 
 - TODO
 
-# Testcase
+## Testcase
 
 - TODO
 
-# How to run
+## How to run
 
 - TODO
