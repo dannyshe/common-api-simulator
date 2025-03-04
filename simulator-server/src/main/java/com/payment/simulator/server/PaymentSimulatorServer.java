@@ -9,7 +9,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
 import com.payment.simulator.server.config.EnableMybatis;
 import com.payment.simulator.server.config.EnablePayMockConfig;
-import com.payment.simulator.common.sensors.annotation.EnableSensors;
 import io.vavr.jackson.datatype.VavrModule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,6 @@ import java.util.TimeZone;
 @SpringBootApplication
 @EnableMybatis
 @EnableDiscoveryClient
-@EnableSensors
 @EnablePayMockConfig
 public class PaymentSimulatorServer {
 

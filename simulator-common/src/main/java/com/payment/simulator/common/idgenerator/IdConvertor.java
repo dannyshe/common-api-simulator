@@ -1,10 +1,7 @@
 package com.payment.simulator.common.idgenerator;
 
 import org.apache.commons.lang3.StringUtils;
-/**
- * @date: 2022/5/16
- * @Description:
- */
+
 public class IdConvertor {
     private static final int PREFIX_LENGTH = 4;
     private static final int LONG_ID_SECTION1_LENGTH = 14;

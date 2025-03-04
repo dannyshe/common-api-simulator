@@ -12,12 +12,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 @Slf4j
 public class JsonUtils {
     private static ObjectMapper mapper = new ObjectMapper()

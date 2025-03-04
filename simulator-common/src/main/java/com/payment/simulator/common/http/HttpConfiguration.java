@@ -18,8 +18,6 @@ public class HttpConfiguration {
 
     /**
      * 基于OkHttp3配置RestTemplate
-     *
-     * @return
      */
     @Bean
     public RestTemplate restTemplate(HttpProperties httpProperties) {

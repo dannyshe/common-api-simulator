@@ -4,10 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-/**
- * @description
- * @date 2022/5/18 20:04
- */
 @Getter
 @Setter
 @Builder

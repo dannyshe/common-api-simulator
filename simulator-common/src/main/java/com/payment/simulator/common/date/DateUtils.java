@@ -5,12 +5,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 public final class DateUtils {
 
     /**

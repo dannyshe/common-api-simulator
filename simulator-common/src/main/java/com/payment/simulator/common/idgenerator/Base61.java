@@ -1,10 +1,5 @@
 package com.payment.simulator.common.idgenerator;
 
-/**
- * @date: 2022/5/16
- * @Description:
- */
-
 public class Base61 {
     private static final char[] DIGITS_CHAR = "0123456789abcdefghijklmnopqrstuvwxyABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private static final int BASE = DIGITS_CHAR.length;

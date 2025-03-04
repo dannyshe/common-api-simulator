@@ -4,10 +4,7 @@ import com.payment.simulator.common.dto.BaseDto;
 import com.payment.simulator.common.enums.PaymentSystem;
 
 /**
- * 支付系统错误
- *
- * 
- * @createTime 2021-11-01
+ * 系统错误
  */
 
 public class PaymentError extends BaseDto {

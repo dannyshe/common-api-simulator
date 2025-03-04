@@ -2,12 +2,6 @@ package com.payment.simulator.common.enums;
 
 import java.util.stream.Stream;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 public enum PaymentSystem {
     PAYMENT_API("01", "PaymentAPI"),
     PAYMENT_CORE("02", "PaymentCore"),

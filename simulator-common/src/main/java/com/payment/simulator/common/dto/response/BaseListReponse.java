@@ -4,12 +4,6 @@ import com.payment.simulator.common.dto.BaseDto;
 
 import java.util.List;
 
-/**
- * DTO基类
- *
- * 
- * @createTime 2021-11-01
- */
 public class BaseListReponse<T> extends BaseDto {
     private boolean hasNext;
     private List<T> items;

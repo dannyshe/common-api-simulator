@@ -7,12 +7,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.StringTokenizer;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 public class IPUtils {
 
     private static final String IP_UNKNOWN = "unknown";

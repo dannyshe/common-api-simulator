@@ -8,12 +8,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
 
-/**
- * IP工具类
- *
- * 
- * @createTime 2021-11-01
- */
 public class OSNewUtil {
 
     

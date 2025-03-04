@@ -8,11 +8,6 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.util.Properties;
 
-/**
- * 描述信息
- *
- * @createTime 2021-12-15
- */
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
 @Slf4j
 public class AlterTimeZoneInterceptor implements Interceptor {

@@ -1,10 +1,7 @@
 package com.payment.simulator.server.entity;
 
 import com.payment.simulator.server.bo.base.Page;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
@@ -17,6 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper=false)
 public class MockRuleQuery extends Page {
 
     /**

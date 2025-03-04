@@ -3,12 +3,6 @@ package com.payment.simulator.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 @Getter
 @AllArgsConstructor
 public enum PayCurrency {
