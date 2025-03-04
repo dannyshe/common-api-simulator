@@ -17,6 +17,7 @@ LOG_PATH_IS_UNDEFINED/
 *.ipr
 
 .gradle
+./buildSrc/.gradle
 
 ### NetBeans ###
 nbproject/private/

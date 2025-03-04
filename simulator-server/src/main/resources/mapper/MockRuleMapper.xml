@@ -35,191 +35,91 @@
         REMARK
     </sql>
 
+    <!-- 公共查询条件 -->
+    <sql id="Common_Where_Clause">
+        <where>
+            <if test="channelId != null">and CHANNEL_ID = #{channelId}</if>
+            <if test="path != null">and `PATH` = #{path}</if>
+            <if test="contentType != null">and CONTENT_TYPE = #{contentType}</if>
+            <if test="templateCode != null">and TEMPLATE_CODE = #{templateCode}</if>
+            <if test="reqRegRule != null">and REQ_REG_RULE = #{reqRegRule}</if>
+            <if test="reqJsonPath != null">and REQ_JSON_PATH = #{reqJsonPath}</if>
+            <if test="reqMatchRule != null">and REQ_MATCH_RULE = #{reqMatchRule}</if>
+            <if test="statusCode != null">and STATUS_CODE = #{statusCode}</if>
+            <if test="responseTemplate != null">and RESPONSE_TEMPLATE = #{responseTemplate}</if>
+            <if test="created != null">and CREATED = #{created}</if>
+            <if test="updated != null">and UPDATED = #{updated}</if>
+            <if test="requestMethod != null">and REQUEST_METHOD = #{requestMethod}</if>
+            <if test="remark != null">and REMARK = #{remark}</if>
+        </where>
+    </sql>
+
     <!-- 单个插入 -->
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
-            parameterType="com.payment.simulator.server.entity.MockRule">
-        insert into mock_rule (ID, CHANNEL_ID, `PATH`, CONTENT_TYPE, TEMPLATE_CODE, REQ_REG_RULE, REQ_JSON_PATH,
-                               REQ_MATCH_RULE, STATUS_CODE, RESPONSE_TEMPLATE, CREATED, UPDATED,REQUEST_METHOD,REMARK)
-        values (#{id}, #{channelId}, #{path}, #{contentType}, #{templateCode}, #{reqRegRule}, #{reqJsonPath},
-                #{reqMatchRule},
-                #{statusCode}, #{responseTemplate}, #{created}, #{updated}, #{requestMethod}, #{remark})
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.payment.simulator.server.entity.MockRule">
+        insert into mock_rule (
+            <include refid="Base_Column_List"/>
+        ) values (
+            #{id}, #{channelId}, #{path}, #{contentType}, #{templateCode},
+            #{reqRegRule}, #{reqJsonPath}, #{reqMatchRule}, #{statusCode},
+            #{responseTemplate}, #{created}, #{updated}, #{requestMethod}, #{remark}
+        )
     </insert>
 
     <!-- 单个更新 -->
     <update id="update" parameterType="com.payment.simulator.server.entity.MockRule">
         update mock_rule
         <set>
-            <if test="channelId != null">
-                CHANNEL_ID = #{channelId},
-            </if>
-            <if test="path != null">
-                `PATH` = #{path},
-            </if>
-            <if test="contentType != null">
-                CONTENT_TYPE = #{contentType},
-            </if>
-            <if test="templateCode != null">
-                TEMPLATE_CODE = #{templateCode},
-            </if>
-            <if test="reqRegRule != null">
-                REQ_REG_RULE = #{reqRegRule},
-            </if>
-            <if test="reqJsonPath != null">
-                REQ_JSON_PATH = #{reqJsonPath},
-            </if>
-            <if test="reqMatchRule != null">
-                REQ_MATCH_RULE = #{reqMatchRule},
-            </if>
-            <if test="statusCode != null">
-                STATUS_CODE = #{statusCode},
-            </if>
-            <if test="responseTemplate != null">
-                RESPONSE_TEMPLATE = #{responseTemplate},
-            </if>
-            <if test="created != null">
-                CREATED = #{created},
-            </if>
-            <if test="updated != null">
-                UPDATED = #{updated},
-            </if>
-            <if test="requestMethod != null">
-                REQUEST_METHOD = #{requestMethod},
-            </if>
-            <if test="remark != null">
-                REMARK = #{remark},
-            </if>
+            <if test="channelId != null">CHANNEL_ID = #{channelId},</if>
+            <if test="path != null">`PATH` = #{path},</if>
+            <if test="contentType != null">CONTENT_TYPE = #{contentType},</if>
+            <if test="templateCode != null">TEMPLATE_CODE = #{templateCode},</if>
+            <if test="reqRegRule != null">REQ_REG_RULE = #{reqRegRule},</if>
+            <if test="reqJsonPath != null">REQ_JSON_PATH = #{reqJsonPath},</if>
+            <if test="reqMatchRule != null">REQ_MATCH_RULE = #{reqMatchRule},</if>
+            <if test="statusCode != null">STATUS_CODE = #{statusCode},</if>
+            <if test="responseTemplate != null">RESPONSE_TEMPLATE = #{responseTemplate},</if>
+            <if test="created != null">CREATED = #{created},</if>
+            <if test="updated != null">UPDATED = #{updated},</if>
+            <if test="requestMethod != null">REQUEST_METHOD = #{requestMethod},</if>
+            <if test="remark != null">REMARK = #{remark},</if>
         </set>
         where ID = #{id}
     </update>
 
     <!-- 删除 -->
-    <update id="delete" parameterType="java.lang.String">
-        delete
-        from mock_rule
-        where ID = #{id}
-    </update>
+    <delete id="delete" parameterType="java.lang.String">
+        delete from mock_rule where ID = #{id}
+    </delete>
 
     <!-- 查询列表 -->
     <select id="query" resultMap="BaseResultMap" parameterType="com.payment.simulator.server.entity.MockRuleQuery">
-        select
-        <include refid="Base_Column_List"/>
+        select <include refid="Base_Column_List"/>
         from mock_rule
-        <where>
-            <if test="channelId != null">
-                and CHANNEL_ID = #{channelId}
-            </if>
-            <if test="path != null">
-                and `PATH` = #{path}
-            </if>
-            <if test="contentType != null">
-                and CONTENT_TYPE = #{contentType}
-            </if>
-            <if test="templateCode != null">
-                and TEMPLATE_CODE = #{templateCode}
-            </if>
-            <if test="reqRegRule != null">
-                and REQ_REG_RULE = #{reqRegRule}
-            </if>
-            <if test="reqJsonPath != null">
-                and REQ_JSON_PATH = #{reqJsonPath}
-            </if>
-            <if test="reqMatchRule != null">
-                and REQ_MATCH_RULE = #{reqMatchRule}
-            </if>
-            <if test="statusCode != null">
-                and STATUS_CODE = #{statusCode}
-            </if>
-            <if test="responseTemplate != null">
-                and RESPONSE_TEMPLATE = #{responseTemplate}
-            </if>
-            <if test="created != null">
-                and CREATED = #{created}
-            </if>
-            <if test="updated != null">
-                and UPDATED = #{updated}
-            </if>
-            <if test="requestMethod != null">
-                and REQUEST_METHOD = #{requestMethod}
-            </if>
-            <if test="remark != null">
-                and REMARK = #{remark}
-            </if>
-        </where>
-        <if test="pageNumber != null">
-            limit #{startPosition},#{endPosition}
-        </if>
+        <include refid="Common_Where_Clause"/>
+        <if test="pageNumber != null">limit #{startPosition},#{endPosition}</if>
     </select>
 
     <!-- 查询列表条数 -->
     <select id="queryCount" resultType="java.lang.Integer" parameterType="com.payment.simulator.server.entity.MockRuleQuery">
-        select count(1)
-        from mock_rule
-        <where>
-            <if test="channelId != null">
-                and CHANNEL_ID = #{channelId}
-            </if>
-            <if test="path != null">
-                and `PATH` = #{path}
-            </if>
-            <if test="contentType != null">
-                and CONTENT_TYPE = #{contentType}
-            </if>
-            <if test="templateCode != null">
-                and TEMPLATE_CODE = #{templateCode}
-            </if>
-            <if test="reqRegRule != null">
-                and REQ_REG_RULE = #{reqRegRule}
-            </if>
-            <if test="reqJsonPath != null">
-                and REQ_JSON_PATH = #{reqJsonPath}
-            </if>
-            <if test="reqMatchRule != null">
-                and REQ_MATCH_RULE = #{reqMatchRule}
-            </if>
-            <if test="statusCode != null">
-                and STATUS_CODE = #{statusCode}
-            </if>
-            <if test="responseTemplate != null">
-                and RESPONSE_TEMPLATE = #{responseTemplate}
-            </if>
-            <if test="created != null">
-                and CREATED = #{created}
-            </if>
-            <if test="updated != null">
-                and UPDATED = #{updated}
-            </if>
-            <if test="requestMethod != null">
-                and REQUEST_METHOD = #{requestMethod}
-            </if>
-            <if test="remark != null">
-                and REMARK = #{remark}
-            </if>
-        </where>
+        select count(1) from mock_rule
+        <include refid="Common_Where_Clause"/>
     </select>
 
     <!-- 单个查询 -->
     <select id="queryById" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from mock_rule
-        where id = #{id}
+        select <include refid="Base_Column_List"/>
+        from mock_rule where id = #{id}
     </select>
 
+    <!-- 查询正则路径规则 -->
     <select id="queryMockRegPathRule" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
+        select <include refid="Base_Column_List"/>
         from mock_rule
         <where>
-            <if test="channelId != null">
-                and CHANNEL_ID = #{channelId}
-            </if>
-            <if test="requestMethod != null">
-                and REQUEST_METHOD = #{requestMethod}
-            </if>
-            <if test="contentType != null">
-                and CONTENT_TYPE = #{contentType}
-            </if>
---             and `PATH` like '%{%'
+            <if test="channelId != null">and CHANNEL_ID = #{channelId}</if>
+            <if test="requestMethod != null">and REQUEST_METHOD = #{requestMethod}</if>
+            <if test="contentType != null">and CONTENT_TYPE = #{contentType}</if>
+            and `PATH` like '%{%'
         </where>
     </select>
 </mapper>
