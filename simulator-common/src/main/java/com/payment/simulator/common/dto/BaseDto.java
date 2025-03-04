@@ -9,12 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 
-/**
- * DTO基类
- *
- * 
- * @createTime 2021-11-01
- */
 public class BaseDto implements Serializable {
     private static final ObjectMapper MAPPER;
 

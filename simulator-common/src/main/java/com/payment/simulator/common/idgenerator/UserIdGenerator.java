@@ -2,12 +2,6 @@ package com.payment.simulator.common.idgenerator;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 public class UserIdGenerator {
     private static final String USER_ID_PREFIX = "usr_";
     private static final String SPACE = " ";

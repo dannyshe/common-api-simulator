@@ -6,12 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * 描述信息
- *
- * 
- * @createTime 2021-11-01
- */
 @Data
 @Builder
 @NoArgsConstructor
