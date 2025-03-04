@@ -15,8 +15,12 @@ dependencies {
     // MyBatis 相关
     api 'org.mybatis:mybatis:3.4.6'
     
-    // JSON 处理
+    // JSON 处理 - 更新 Jackson 相关依赖
+    api 'com.fasterxml.jackson.core:jackson-core:2.13.3'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.13.3'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.13.3'
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.13.3'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.3'  // 添加这行
     api 'com.alibaba:fastjson:2.0.11'
     api 'io.vavr:vavr-jackson:0.10.3'
     
@@ -45,6 +49,12 @@ dependencies {
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+// 添加编译选项以处理警告
+tasks.withType(JavaCompile) {
+    options.compilerArgs << '-Xlint:deprecation'
+    options.compilerArgs << '-Xlint:unchecked'
 }
 
 description = 'simulator-common'
