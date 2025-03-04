@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.payment.simulator.common.dto.BaseDto;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * DTO基类
@@ -12,6 +13,7 @@ import lombok.Data;
  * @createTime 2021-11-01
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class BasePaginationResponse<T> extends BaseDto {
     private List<T> items;
     private int currentPage;
