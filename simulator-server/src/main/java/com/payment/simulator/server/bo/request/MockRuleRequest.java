@@ -3,6 +3,7 @@ package com.payment.simulator.server.bo.request;
 import com.payment.simulator.server.bo.base.Page;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 
@@ -10,6 +11,7 @@ import lombok.Data;
  * @date 2022/4/7
  **/
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class MockRuleRequest extends Page {
 
     /**

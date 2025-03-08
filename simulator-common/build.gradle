@@ -9,12 +9,8 @@ plugins {
 dependencies {
     // Spring 相关依赖
     api 'org.springframework:spring-web:5.3.22'
-    api 'org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:2.0.1'
     api 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-    
-    // MyBatis 相关
-    api 'org.mybatis:mybatis:3.4.6'
-    
+
     // JSON 处理 - 更新 Jackson 相关依赖
     api 'com.fasterxml.jackson.core:jackson-core:2.13.3'
     api 'com.fasterxml.jackson.core:jackson-databind:2.13.3'

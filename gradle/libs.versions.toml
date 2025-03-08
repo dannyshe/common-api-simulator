@@ -30,9 +30,6 @@ org-codehaus-groovy-groovy-jsr223 = "3.0.13"
 org-hibernate-validator-hibernate-validator = "6.2.3.Final"
 org-jmockit-jmockit = "1.16"
 org-mockito-mockito-core = "2.22.0"
-org-mybatis-mybatis = "3.4.6"
-org-mybatis-spring-boot-mybatis-spring-boot-autoconfigure = "1.3.2"
-org-mybatis-spring-boot-mybatis-spring-boot-starter = "2.0.1"
 org-projectlombok-lombok = "1.18.28"
 org-projectlombok-lombok-x1 = "1.18.24"
 org-redisson-redisson-spring-boot-starter = "3.17.5"
@@ -73,9 +70,6 @@ org-codehaus-groovy-groovy-jsr223 = { module = "org.codehaus.groovy:groovy-jsr22
 org-hibernate-validator-hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "org-hibernate-validator-hibernate-validator" }
 org-jmockit-jmockit = { module = "org.jmockit:jmockit", version.ref = "org-jmockit-jmockit" }
 org-mockito-mockito-core = { module = "org.mockito:mockito-core", version.ref = "org-mockito-mockito-core" }
-org-mybatis-mybatis = { module = "org.mybatis:mybatis", version.ref = "org-mybatis-mybatis" }
-org-mybatis-spring-boot-mybatis-spring-boot-autoconfigure = { module = "org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure", version.ref = "org-mybatis-spring-boot-mybatis-spring-boot-autoconfigure" }
-org-mybatis-spring-boot-mybatis-spring-boot-starter = { module = "org.mybatis.spring.boot:mybatis-spring-boot-starter", version.ref = "org-mybatis-spring-boot-mybatis-spring-boot-starter" }
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 org-projectlombok-lombok-x1 = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok-x1" }
 org-redisson-redisson-spring-boot-starter = { module = "org.redisson:redisson-spring-boot-starter", version.ref = "org-redisson-redisson-spring-boot-starter" }

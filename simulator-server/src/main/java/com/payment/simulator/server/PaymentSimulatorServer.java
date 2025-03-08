@@ -7,7 +7,6 @@ package com.payment.simulator.server;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.*;
-import com.payment.simulator.server.config.EnableMybatis;
 import com.payment.simulator.server.config.EnablePayMockConfig;
 import io.vavr.jackson.datatype.VavrModule;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import java.util.TimeZone;
 
 @Slf4j
 @SpringBootApplication
-@EnableMybatis
 @EnableDiscoveryClient
 @EnablePayMockConfig
 public class PaymentSimulatorServer {

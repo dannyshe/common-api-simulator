@@ -1,80 +1,53 @@
 package com.payment.simulator.server.entity;
 
 import lombok.Data;
-
+import javax.persistence.*;
 import java.util.Date;
 
-/**
- * 
- * @version v1.0
- * @date 2022/4/7
- **/
 @Data
+@Entity
+@Table(name = "mock_rule")
 public class MockRule {
 
-    /**
-     * id
-     */
+    @Id
     private String id;
 
-    /**
-     * 渠道
-     */
+    @Column(name = "channel_id")
     private String channelId;
 
-
-    /**
-     * 请求路径
-     */
+    @Column(name = "path")
     private String path;
 
-    /**
-     * 请求方法POST、GET、UPDATE
-     */
+    @Column(name = "request_method", length = 20)
     private String requestMethod;
-    /**
-     * 请求格式
-     */
+
+    @Column(name = "content_type")
     private String contentType;
 
-    /**
-     * 特定逻辑模版code
-     */
+    @Column(name = "template_code")
     private String templateCode;
 
-
-    /**
-     * 入参正则表达式、适用非json
-     */
+    @Column(name = "req_reg_rule")
     private String reqRegRule;
-    /**
-     * 入参json路径，适用json
-     */
+
+    @Column(name = "req_json_path")
     private String reqJsonPath;
-    /**
-     * 匹配入参值规则
-     */
+
+    @Column(name = "req_match_rule")
     private String reqMatchRule;
-    /**
-     * 回参code
-     */
+
+    @Column(name = "status_code", length = 20)
     private String statusCode;
-    /**
-     * 回参模版，根据模版生成对应回参
-     */
+
+    @Column(name = "response_template", columnDefinition = "text")
     private String responseTemplate;
 
-    /**
-     * 创建时间
-     */
+    @Column(name = "created")
     private Date created;
 
-    /**
-     * 返回时间
-     */
+    @Column(name = "updated")
     private Date updated;
-    /**
-     * 备注
-     */
+
+    @Column(name = "remark", columnDefinition = "text")
     private String remark;
 }

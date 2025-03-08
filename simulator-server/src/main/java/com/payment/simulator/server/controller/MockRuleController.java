@@ -4,14 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.common.utils.BeanUtils;
 import com.payment.simulator.server.bo.MockContext;
 import com.payment.simulator.server.bo.request.MockRuleRequest;
-import com.payment.simulator.server.bo.response.MockRuleResponse;
 import com.payment.simulator.server.entity.MockRule;
-import com.payment.simulator.server.entity.MockRuleQuery;
-import com.payment.simulator.server.service.IMockRuleService;
+import com.payment.simulator.server.service.impl.MockRuleService;
 import com.payment.simulator.server.util.BodyReaderHttpServletRequestWrapper;
 import com.payment.simulator.server.util.RequestParamsToMap;
 import com.payment.simulator.server.util.XmlTool;
-import com.payment.simulator.common.dto.response.BasePaginationResponse;
 import com.payment.simulator.common.dto.response.GenericResponse;
 import com.payment.simulator.common.exception.PaymentException;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +37,7 @@ import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 @Slf4j
 public class MockRuleController {
     @Autowired
-    private IMockRuleService mockRuleServiceo;
+    private MockRuleService mockRuleServiceo;
 
 
     @RequestMapping("/**")
@@ -92,12 +89,12 @@ public class MockRuleController {
 
     }
 
-    @PostMapping("/v1/api/mock_rule/query")
-    public GenericResponse<BasePaginationResponse<MockRuleResponse>> queryMockRule(
-            @RequestBody MockRuleRequest request) {
-        MockRuleQuery mockRuleQuery = BeanUtils.copyProperties(request, MockRuleQuery.class);
-        return GenericResponse.success(mockRuleServiceo.queryMockRules(mockRuleQuery));
-    }
+//    @PostMapping("/v1/api/mock_rule/query")
+//    public GenericResponse<BasePaginationResponse<MockRuleResponse>> queryMockRule(
+//            @RequestBody MockRuleRequest request) {
+//        MockRuleQuery mockRuleQuery = BeanUtils.copyProperties(request, MockRuleQuery.class);
+//        return GenericResponse.success(mockRuleServiceo.queryMockRules(mockRuleQuery));
+//    }
 
     @PostMapping("/v1/api/mock_rule/create")
     public GenericResponse createMockRule(
@@ -110,14 +107,16 @@ public class MockRuleController {
     public GenericResponse updateMockRule(
             @RequestBody MockRuleRequest request) {
         MockRule mockRule = BeanUtils.copyProperties(request, MockRule.class);
-        return GenericResponse.success(mockRuleServiceo.updateMockRule(mockRule));
+        mockRuleServiceo.updateMockRule(mockRule);
+        return GenericResponse.success();
     }
 
     @PostMapping("/v1/api/mock_rule/delete")
     public GenericResponse deleteMockRule(
             @RequestBody MockRuleRequest request) {
         MockRule mockRule = BeanUtils.copyProperties(request, MockRule.class);
-        return GenericResponse.success(mockRuleServiceo.delteMockRule(mockRule.getId()));
+        mockRuleServiceo.delteMockRule(mockRule.getId());
+        return GenericResponse.success();
     }
 
 }

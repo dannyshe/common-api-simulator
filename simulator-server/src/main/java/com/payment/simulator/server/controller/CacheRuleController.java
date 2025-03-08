@@ -1,12 +1,9 @@
 package com.payment.simulator.server.controller;
 
 import com.payment.simulator.server.bo.request.CacheRuleRequest;
-import com.payment.simulator.server.bo.response.CacheRuleResponse;
 import com.payment.simulator.server.entity.CacheRule;
-import com.payment.simulator.server.entity.CacheRuleQuery;
-import com.payment.simulator.server.service.ICacheRuleService;
-import com.payment.simulator.common.dto.response.BasePaginationResponse;
 import com.payment.simulator.common.dto.response.GenericResponse;
+import com.payment.simulator.server.service.impl.CacheRuleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,15 +19,15 @@ import com.payment.simulator.common.utils.BeanUtils;
 @Slf4j
 public class CacheRuleController {
     @Autowired
-    private ICacheRuleService cacheRuleService;
+    private CacheRuleService cacheRuleService;
 
 
-    @PostMapping("/v1/api/cache_rule/query")
-    public GenericResponse<BasePaginationResponse<CacheRuleResponse>> queryCacheRule(
-            @RequestBody CacheRuleRequest request) {
-        CacheRuleQuery cacheRuleQuery = BeanUtils.copyProperties(request, CacheRuleQuery.class);
-        return GenericResponse.success(cacheRuleService.queryCacheRules(cacheRuleQuery));
-    }
+//    @PostMapping("/v1/api/cache_rule/query")
+//    public GenericResponse<BasePaginationResponse<CacheRuleResponse>> queryCacheRule(
+//            @RequestBody CacheRuleRequest request) {
+//        CacheRuleQuery cacheRuleQuery = BeanUtils.copyProperties(request, CacheRuleQuery.class);
+//        return GenericResponse.success(cacheRuleService.queryCacheRules(cacheRuleQuery));
+//    }
 
     @PostMapping("/v1/api/cache_rule/create")
     public GenericResponse createCacheRule(
@@ -43,13 +40,15 @@ public class CacheRuleController {
     public GenericResponse updateCacheRule(
             @RequestBody CacheRuleRequest request) {
         CacheRule cacheRule = BeanUtils.copyProperties(request, CacheRule.class);
-        return GenericResponse.success(cacheRuleService.updateCacheRule(cacheRule));
+        cacheRuleService.updateCacheRule(cacheRule);
+        return GenericResponse.success();
     }
 
     @PostMapping("/v1/api/cache_rule/delete")
     public GenericResponse deleteCacheRule(
             @RequestBody CacheRuleRequest request) {
         CacheRule cacheRule = BeanUtils.copyProperties(request, CacheRule.class);
-        return GenericResponse.success(cacheRuleService.deleteCacheRule(cacheRule.getId()));
+        cacheRuleService.deleteCacheRule(cacheRule.getId());
+        return GenericResponse.success();
     }
 }

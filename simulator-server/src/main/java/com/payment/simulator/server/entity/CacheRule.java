@@ -1,84 +1,59 @@
 package com.payment.simulator.server.entity;
 
 import lombok.Data;
-
+import javax.persistence.*;
 import java.util.Date;
 
-/**
- * 
- * @version v1.0
- * @date 2022/4/7
- **/
-
 @Data
+@Entity
+@Table(name = "cache_rule")
 public class CacheRule {
 
-    /**
-     * id
-     */
+    @Id
     private String id;
 
-    /**
-     * mock规则表id
-     */
+    @Column(name = "mock_rule_id")
     private String mockRuleId;
-    /**
-     * 缓存操作
-     */
+
+    @Column(name = "cache_option")
     private String cacheOption;
 
-    /**
-     * 获取入参中key规则
-     */
+    @Column(name = "req_cache_rule")
     private String reqCacheRule;
 
-    /**
-     * 缓存数据
-     */
+    @Column(name = "cache_body", columnDefinition = "text")
     private String cacheBody;
 
-    /**
-     * 跟缓存中数据匹配规则
-     */
+    @Column(name = "cache_body_match_rule")
     private String cacheBodyMatchRule;
-    /**
-     * 缓存时间，单位秒
-     */
+
+    @Column(name = "cache_time")
     private Long cacheTime;
-    /**
-     * 匹配失败返回值
-     */
+
+    @Column(name = "match_error_response_template", columnDefinition = "text")
     private String matchErrorResponseTemplate;
-    /**
-     * 缓存过期后返回值模版
-     */
+
+    @Column(name = "null_response_template", columnDefinition = "text")
     private String nullResponseTemplate;
-    /**
-     * 返回值模版
-     */
+
+    @Column(name = "response_template", columnDefinition = "text")
     private String responseTemplate;
-    /**
-     * 匹配成功返回的code
-     */
+
+    @Column(name = "match_status_code")
     private String matchStatusCode;
-    /**
-     * 匹配错误返回的code
-     */
+
+    @Column(name = "null_match_status_code")
     private String nullMatchStatusCode;
-    /**
-     * 缓存过期后返回值Code
-     */
+
+    @Column(name = "match_error_status_code")
     private String matchErrorStatusCode;
-    /**
-     * 创建时间
-     */
+
+    @Column(name = "created")
     private Date created;
-    /**
-     * 返回时间
-     */
+
+    @Column(name = "updated")
     private Date updated;
-    /**
-     * 备注
-     */
+
+    @Column(name = "remark", columnDefinition = "text")
     private String remark;
 }
