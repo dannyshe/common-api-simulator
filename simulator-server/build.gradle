@@ -16,10 +16,6 @@ dependencies {
     // Spring Cloud 相关
     api 'org.springframework.cloud:spring-cloud-commons:4.0.4'
     
-    // HTTP 客户端
-    api 'io.github.openfeign:feign-httpclient:12.5'
-    api 'com.squareup.okhttp3:okhttp:4.11.0'
-    
     // Groovy 相关
     api 'org.codehaus.groovy:groovy:3.0.24'
     api 'org.codehaus.groovy:groovy-jsr223:3.0.24'

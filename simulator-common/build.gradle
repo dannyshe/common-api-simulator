@@ -34,9 +34,6 @@ dependencies {
     api 'io.jaegertracing:jaeger-core:1.8.1'
     api 'com.sensorsdata.analytics.javasdk:SensorsAnalyticsSDK:3.2.0'
     
-    // HTTP 客户端
-    api 'com.squareup.okhttp3:okhttp:4.11.0'
-    
     // 测试相关
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
