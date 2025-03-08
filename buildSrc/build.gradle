@@ -11,3 +11,8 @@ repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
 }
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-gradle-plugin:3.1.5'
+    implementation 'io.spring.gradle:dependency-management-plugin:1.1.3'
+}

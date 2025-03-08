@@ -2,7 +2,7 @@ package com.payment.simulator.server.util;
 
 import com.alibaba.fastjson.JSONObject;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

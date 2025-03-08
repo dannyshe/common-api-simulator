@@ -3,7 +3,7 @@ package com.payment.simulator.server.config;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * 

@@ -36,33 +36,20 @@ public class GenericResponse<T> extends AbstractResponse {
         this.retry = false;
     }
 
-    public static <T> GenericResponse<T> failNoRetry(int code, String msg) {
-        return fail(code, false, msg);
-    }
+
 
     public static <T> GenericResponse<T> failNoRetry(String code, String msg) {
         return fail(code, false, msg);
     }
 
-    public static <T> GenericResponse<T> fail(int code, String msg) {
-        return fail(code, true, msg);
-    }
 
-    public static <T> GenericResponse<T> fail(int code, boolean retry, String msg) {
-        GenericResponse<T> genericResult = new GenericResponse();
-        genericResult.setSuccess(false);
-        genericResult.setCode(String.valueOf(code));
-        genericResult.setMsg(msg);
-        genericResult.setRetry(retry);
-        return genericResult;
-    }
 
     public static <T> GenericResponse<T> fail(String code, String msg) {
         return fail(code, true, msg);
     }
 
     public static <T> GenericResponse<T> fail(String code, boolean retry, String msg) {
-        GenericResponse<T> genericResult = new GenericResponse();
+        GenericResponse<T> genericResult = new GenericResponse<>();
         genericResult.setSuccess(false);
         genericResult.setCode(code);
         genericResult.setRetry(retry);
@@ -75,13 +62,15 @@ public class GenericResponse<T> extends AbstractResponse {
     }
 
     public static <T> GenericResponse<T> success(T data) {
-        GenericResponse<T> genericResult = new GenericResponse();
+        GenericResponse<T> genericResult = new GenericResponse<>();
         genericResult.setSuccess(true);
         genericResult.setCode(SUCCESS.code);
         genericResult.setMsg(SUCCESS.msg);
         genericResult.setData(data);
         return genericResult;
     }
+
+
 
     public T getData() {
         return this.data;

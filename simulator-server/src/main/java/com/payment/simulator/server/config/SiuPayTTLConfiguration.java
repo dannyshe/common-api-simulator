@@ -5,7 +5,7 @@ import com.alibaba.ttl.TtlCopier;
 import com.payment.simulator.server.engine.ChainRequestContext;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.lang.reflect.Field;
 
 @Slf4j
