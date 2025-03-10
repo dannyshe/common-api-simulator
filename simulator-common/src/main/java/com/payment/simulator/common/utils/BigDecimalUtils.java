@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 import org.apache.commons.lang3.StringUtils;
 
 import com.payment.simulator.common.exception.ErrorCode;
-import com.payment.simulator.common.exception.PaymentException;
+import com.payment.simulator.common.exception.SimulateException;
 import com.payment.simulator.common.enums.PayCurrency;
 
 /**
@@ -164,7 +164,7 @@ public class BigDecimalUtils {
         try {
             return new BigDecimal(decimal);
         } catch (Exception e) {
-            throw new PaymentException(ErrorCode.PARAM_ERROR);
+            throw new SimulateException(ErrorCode.PARAM_ERROR);
         }
     }
 
@@ -175,7 +175,7 @@ public class BigDecimalUtils {
             }
             return new BigDecimal(decimal);
         } catch (Exception e) {
-            throw new PaymentException(ErrorCode.PARAM_ERROR);
+            throw new SimulateException(ErrorCode.PARAM_ERROR);
         }
     }
 }

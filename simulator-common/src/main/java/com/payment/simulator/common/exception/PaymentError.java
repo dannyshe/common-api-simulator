@@ -46,8 +46,8 @@ public class PaymentError extends BaseDto {
         this.msg = msg;
     }
 
-    public PaymentException toPaymentException(){
-        return new PaymentException(ErrorCode.getErrorCodeByCode(this.code), this.msg, PaymentSystem.getPaymentSystemById(this.systemId));
+    public SimulateException toPaymentException(){
+        return new SimulateException(ErrorCode.getErrorCodeByCode(this.code), this.msg, PaymentSystem.getPaymentSystemById(this.systemId));
     }
 
 }

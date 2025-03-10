@@ -2,7 +2,7 @@ package com.payment.simulator.server.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.payment.simulator.server.bo.MockContext;
+import com.payment.simulator.server.bo.SimulateContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -38,13 +38,13 @@ public class VelocityService {
         velocityEngine = new VelocityEngine(props);
     }
 
-    public String assignValue(MockContext mockContext, String template) {
+    public String assignValue(SimulateContext simulateContext, String template) {
         // 取得velocity的上下文context
-        log.info("[assignValue]context:{}", JSONObject.toJSONString(mockContext));
+        log.info("[assignValue]context:{}", JSONObject.toJSONString(simulateContext));
         log.info("[assignValue]response template:{}", template);
         StringWriter stringWriter = new StringWriter();
         VelocityContext context = new VelocityContext();
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(mockContext);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(simulateContext);
         for (Map.Entry entry : jsonObject.entrySet()) {
             context.put((String) entry.getKey(), entry.getValue());
         }

@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class MockContext {
+public class SimulateContext {
 
     private String requestPath;
+
+    private String requestQueryString;
 
     private JSONObject requestHeader = new JSONObject();
 

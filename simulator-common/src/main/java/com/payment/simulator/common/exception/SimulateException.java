@@ -2,41 +2,38 @@ package com.payment.simulator.common.exception;
 
 import com.payment.simulator.common.enums.PaymentSystem;
 
-/**
- * 支付异常父类
- */
-public class PaymentException extends RuntimeException{
+public class SimulateException extends RuntimeException{
     private String internalMessage = "";
     private ErrorCode errorCode = null;
     private PaymentSystem system = null;
 
-    public PaymentException(ErrorCode errorCode, String internalMessage, PaymentSystem system, Exception exception){
+    public SimulateException(ErrorCode errorCode, String internalMessage, PaymentSystem system, Exception exception){
         super(exception);
         this.internalMessage = internalMessage;
         this.system=system;
         this.errorCode = errorCode;
     }
 
-    public PaymentException(ErrorCode errorCode, String internalMessage, PaymentSystem system){
+    public SimulateException(ErrorCode errorCode, String internalMessage, PaymentSystem system){
         super(internalMessage);
         this.internalMessage = internalMessage;
         this.errorCode = errorCode;
         this.system=system;
     }
 
-    public PaymentException(ErrorCode errorCode, String internalMessage){
+    public SimulateException(ErrorCode errorCode, String internalMessage){
         super(internalMessage);
         this.internalMessage = internalMessage;
         this.errorCode = errorCode;
         this.system=system;
     }
-    public PaymentException(ErrorCode errorCode, PaymentSystem system){
+    public SimulateException(ErrorCode errorCode, PaymentSystem system){
         super(errorCode.getMsg());
         this.errorCode = errorCode;
         this.system=system;
     }
 
-    public PaymentException(ErrorCode errorCode){
+    public SimulateException(ErrorCode errorCode){
         super(errorCode.getMsg());
         this.errorCode = errorCode;
     }

@@ -1,6 +1,6 @@
 package com.payment.simulator.server.template;
 
-import com.payment.simulator.server.bo.MockContext;
+import com.payment.simulator.server.bo.SimulateContext;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -10,6 +10,6 @@ import org.springframework.http.ResponseEntity;
  */
 public interface MockTemplateInterface {
 
-    ResponseEntity mockData(MockContext mockContext);
+    ResponseEntity mockData(SimulateContext simulateContext);
 
 }

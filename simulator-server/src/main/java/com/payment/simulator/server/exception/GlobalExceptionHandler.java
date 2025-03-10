@@ -3,7 +3,7 @@ package com.payment.simulator.server.exception;
 import com.payment.simulator.common.enums.PaymentSystem;
 import com.payment.simulator.common.exception.ErrorCode;
 import com.payment.simulator.common.exception.PaymentError;
-import com.payment.simulator.common.exception.PaymentException;
+import com.payment.simulator.common.exception.SimulateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +29,9 @@ public class GlobalExceptionHandler {
      * @param e
      * @return
      */
-    @ExceptionHandler({PaymentException.class})
+    @ExceptionHandler({SimulateException.class})
     public ResponseEntity<PaymentError> paymentErrorHandler(HttpServletRequest req, Exception e) {
-        PaymentException exception = (PaymentException) e;
+        SimulateException exception = (SimulateException) e;
         log.error("catch global PaymentException with url:{},msg:{}", req.getRequestURI(),
                 exception.getInternalMessage(), e);
         return new ResponseEntity<>(exception.toPaymentError(), null, HttpStatus.OK);
