@@ -14,10 +14,10 @@ import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
 import com.payment.simulator.server.entity.HitRule;
 import com.payment.simulator.server.entity.OldMockRule;
+import com.payment.simulator.server.enums.ActionTypeEnum;
 import com.payment.simulator.server.enums.CacheOptionEnum;
 import com.payment.simulator.server.repository.HitRuleRepository;
 import com.payment.simulator.server.repository.OldMockRuleRepository;
-import com.payment.simulator.server.service.TemplateService;
 import com.payment.simulator.server.util.JSONUtil;
 import com.payment.simulator.server.util.RequestPathUtil;
 import com.payment.simulator.server.util.VelocityService;
@@ -49,16 +49,15 @@ public class SimulateService {
     private OldMockRuleRepository oldMockRuleRepository;
 
     @Autowired
-    private CacheRuleService cacheRuleService;
+    private CacheService cacheService;
 
     @Autowired
     protected RedisTemplate<String, String> redisTemplate;
 
     @Autowired
-    private TemplateService templateService;
-
-    @Autowired
     private VelocityService velocityService;
+
+    private final static String DEFAULT_ERROR_RESPONSE = "Error Response Code Matched.";
 
 
     public ResponseEntity execute(SimulateContext simulateContext) {
@@ -132,14 +131,63 @@ public class SimulateService {
      * @return
      */
     private ResponseEntity handleDefaultLogic(HitRule hitRule, SimulateContext simulateContext) {
-        //handle timeout response code
-        if (StringUtils.contains(hitRule.getResponseCode(), Constant.STATUS_CODE_TIMEOUT)) {
-            handleTimeout(hitRule.getResponseCode());
-        }
-        //handle other response code
-        //todo
 
-        //handle 2XX response code
+        String responseCode = hitRule.getResponseCode();
+        if (responseCode.contains(Constant.RESPONSE_CODE_TIMEOUT)) {
+            //handle timeout response code
+            handleTimeout(hitRule.getResponseCode());
+        }else if(!responseCode.equals("200") && !responseCode.equals("201")){
+            //handle abnormal response code
+            try {
+                int statusCode = Integer.parseInt(responseCode);
+                HttpStatus httpStatus = HttpStatus.resolve(statusCode);
+                if (httpStatus != null) {
+                    return ResponseEntity.status(httpStatus).body(DEFAULT_ERROR_RESPONSE);
+                } else {
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                            .body("Invalid status code: " + responseCode);
+                }
+            } catch (NumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Invalid status code format: " + responseCode);
+            }
+        }
+
+        ActionTypeEnum actionType = ActionTypeEnum.fromString(hitRule.getActionType());
+        String actionId = hitRule.getActionId();
+        if(StringUtils.isNotEmpty(actionId)){
+            switch (actionType){
+                case ASSEMBLE_ONLY -> {
+                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
+                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                }
+                case ASSEMBLE_AND_CACHE -> {
+                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
+                    //todo save to cache
+                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                }
+                case QUERY_CACHE -> {
+                    //query from cache
+                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                    //return new ResponseEntity<>(response,
+                    //        HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                }
+                case UPDATE_CACHE -> {
+                    //udpate cache
+                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                    //return new ResponseEntity<>(response,
+                    //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                }
+                case DELETE_CACHE -> {
+                    //delete cache
+                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                    //return new ResponseEntity<>(response,
+                    //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                }
+            }
+        }
+
+        //default action - ASSEMBLE_ONLY
         String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
         return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
     }
@@ -193,7 +241,7 @@ public class SimulateService {
             }
         }
         //优先执行超时任务
-        if (StringUtils.contains(statusCode, Constant.STATUS_CODE_TIMEOUT)) {
+        if (StringUtils.contains(statusCode, Constant.RESPONSE_CODE_TIMEOUT)) {
             handleTimeout(statusCode);
         }
         if (StringUtils.isEmpty(template)) {

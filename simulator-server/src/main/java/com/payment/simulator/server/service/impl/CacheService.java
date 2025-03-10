@@ -20,7 +20,7 @@ import java.util.UUID;
  */
 @Slf4j
 @Service
-public class CacheRuleService{
+public class CacheService {
 
     @Autowired
     private OldCacheRuleRepository oldCacheRuleRepository;

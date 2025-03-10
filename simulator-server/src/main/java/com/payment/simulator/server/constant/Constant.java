@@ -26,7 +26,8 @@ public class Constant {
 
     public static final String MOCK_RULE = "mockRule";
 
-    public static final String STATUS_CODE_TIMEOUT = "timeout";
+    public static final String RESPONSE_CODE_TIMEOUT = "timeout";
+    public static final String RESPONSE_CODE_ERROR = "error";
 
     public static final String CACHE_BODY = "cache_body";
 
