@@ -7,7 +7,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "mock_rule")
-public class MockRule {
+public class OldMockRule {
 
     @Id
     private String id;

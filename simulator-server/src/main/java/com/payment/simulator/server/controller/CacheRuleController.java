@@ -1,7 +1,7 @@
 package com.payment.simulator.server.controller;
 
 import com.payment.simulator.server.bo.request.CacheRuleRequest;
-import com.payment.simulator.server.entity.CacheRule;
+import com.payment.simulator.server.entity.OldCacheRule;
 import com.payment.simulator.common.dto.response.GenericResponse;
 import com.payment.simulator.server.service.impl.CacheRuleService;
 import lombok.extern.slf4j.Slf4j;
@@ -32,23 +32,23 @@ public class CacheRuleController {
     @PostMapping("/v1/api/cache_rule/create")
     public GenericResponse createCacheRule(
             @RequestBody CacheRuleRequest request) {
-        CacheRule cacheRule = BeanUtils.copyProperties(request, CacheRule.class);
-        return GenericResponse.success(cacheRuleService.insertCacheRule(cacheRule));
+        OldCacheRule oldCacheRule = BeanUtils.copyProperties(request, OldCacheRule.class);
+        return GenericResponse.success(cacheRuleService.insertCacheRule(oldCacheRule));
     }
 
     @PostMapping("/v1/api/cache_rule/update")
     public GenericResponse updateCacheRule(
             @RequestBody CacheRuleRequest request) {
-        CacheRule cacheRule = BeanUtils.copyProperties(request, CacheRule.class);
-        cacheRuleService.updateCacheRule(cacheRule);
+        OldCacheRule oldCacheRule = BeanUtils.copyProperties(request, OldCacheRule.class);
+        cacheRuleService.updateCacheRule(oldCacheRule);
         return GenericResponse.success();
     }
 
     @PostMapping("/v1/api/cache_rule/delete")
     public GenericResponse deleteCacheRule(
             @RequestBody CacheRuleRequest request) {
-        CacheRule cacheRule = BeanUtils.copyProperties(request, CacheRule.class);
-        cacheRuleService.deleteCacheRule(cacheRule.getId());
+        OldCacheRule oldCacheRule = BeanUtils.copyProperties(request, OldCacheRule.class);
+        cacheRuleService.deleteCacheRule(oldCacheRule.getId());
         return GenericResponse.success();
     }
 }

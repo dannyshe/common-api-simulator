@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.common.utils.BeanUtils;
 import com.payment.simulator.server.bo.MockContext;
 import com.payment.simulator.server.bo.request.MockRuleRequest;
-import com.payment.simulator.server.entity.MockRule;
+import com.payment.simulator.server.entity.OldMockRule;
 import com.payment.simulator.server.service.impl.MockRuleService;
 import com.payment.simulator.server.util.BodyReaderHttpServletRequestWrapper;
 import com.payment.simulator.server.util.RequestParamsToMap;
@@ -41,7 +41,6 @@ public class MockRuleController {
 
 
     @RequestMapping("/**")
-//    @LogAnnotation(name = "渠道快捷改造mock数据接口", detailLogType = LogNameConstants.FACADE_INFO)
     public ResponseEntity doMock(HttpServletRequest request, HttpServletResponse response) throws Exception {
         //校验解析请求数据
         MockContext mockContext = checkAndParseRequest(request);
@@ -99,23 +98,23 @@ public class MockRuleController {
     @PostMapping("/v1/api/mock_rule/create")
     public GenericResponse createMockRule(
             @RequestBody MockRuleRequest request) {
-        MockRule mockRule = BeanUtils.copyProperties(request, MockRule.class);
-        return GenericResponse.success(mockRuleServiceo.insertMockRule(mockRule));
+        OldMockRule oldMockRule = BeanUtils.copyProperties(request, OldMockRule.class);
+        return GenericResponse.success(mockRuleServiceo.insertMockRule(oldMockRule));
     }
 
     @PostMapping("/v1/api/mock_rule/update")
     public GenericResponse updateMockRule(
             @RequestBody MockRuleRequest request) {
-        MockRule mockRule = BeanUtils.copyProperties(request, MockRule.class);
-        mockRuleServiceo.updateMockRule(mockRule);
+        OldMockRule oldMockRule = BeanUtils.copyProperties(request, OldMockRule.class);
+        mockRuleServiceo.updateMockRule(oldMockRule);
         return GenericResponse.success();
     }
 
     @PostMapping("/v1/api/mock_rule/delete")
     public GenericResponse deleteMockRule(
             @RequestBody MockRuleRequest request) {
-        MockRule mockRule = BeanUtils.copyProperties(request, MockRule.class);
-        mockRuleServiceo.delteMockRule(mockRule.getId());
+        OldMockRule oldMockRule = BeanUtils.copyProperties(request, OldMockRule.class);
+        mockRuleServiceo.delteMockRule(oldMockRule.getId());
         return GenericResponse.success();
     }
 

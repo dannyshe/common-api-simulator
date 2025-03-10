@@ -4,13 +4,10 @@ import lombok.Data;
 import jakarta.persistence.*;
 import java.util.Date;
 
-
-import jakarta.persistence.*;
-
 @Data
 @Entity
 @Table(name = "cache_rule")
-public class CacheRule {
+public class OldCacheRule {
 
     @Id
     private String id;

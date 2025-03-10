@@ -1,9 +1,9 @@
 package com.payment.simulator.server.service.impl;
 
 import com.payment.simulator.server.bo.CacheRuleBO;
-import com.payment.simulator.server.entity.CacheRule;
+import com.payment.simulator.server.entity.OldCacheRule;
 import com.payment.simulator.common.utils.BeanUtils;
-import com.payment.simulator.server.repository.CacheRuleRepository;
+import com.payment.simulator.server.repository.OldCacheRuleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +12,6 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-
-import static com.payment.simulator.common.exception.ErrorCode.PARAM_ERROR;
-import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 
 /**
  * 
@@ -26,7 +23,7 @@ import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 public class CacheRuleService{
 
     @Autowired
-    private CacheRuleRepository cacheRuleRepository;
+    private OldCacheRuleRepository oldCacheRuleRepository;
 
 //    @Override
 //    public BasePaginationResponse<CacheRuleResponse> queryCacheRules(CacheRuleQuery cacheRuleQuery) {
@@ -38,27 +35,27 @@ public class CacheRuleService{
 //        return pagenationResponse;
 //    }
 
-    public CacheRule insertCacheRule(CacheRule cacheRule) {
-        cacheRule.setId(UUID.randomUUID().toString());
-        cacheRule.setCreated(new Date());
-        cacheRuleRepository.save(cacheRule);
-        return cacheRuleRepository.save(cacheRule);
+    public OldCacheRule insertCacheRule(OldCacheRule oldCacheRule) {
+        oldCacheRule.setId(UUID.randomUUID().toString());
+        oldCacheRule.setCreated(new Date());
+        oldCacheRuleRepository.save(oldCacheRule);
+        return oldCacheRuleRepository.save(oldCacheRule);
     }
 
-    public void updateCacheRule(CacheRule cacheRule) {
-        cacheRule.setUpdated(new Date());
-        cacheRuleRepository.save(cacheRule);
+    public void updateCacheRule(OldCacheRule oldCacheRule) {
+        oldCacheRule.setUpdated(new Date());
+        oldCacheRuleRepository.save(oldCacheRule);
     }
 
     public void deleteCacheRule(String id) {
-        cacheRuleRepository.deleteById(id);
+        oldCacheRuleRepository.deleteById(id);
     }
 
     public CacheRuleBO queryCacheRuleByMockId(String mockRuleId) {
-        List<CacheRule> cacheRules =
-                cacheRuleRepository.queryByMockRuleId(mockRuleId);
-        if (CollectionUtils.isNotEmpty(cacheRules)) {
-            return BeanUtils.copyProperties(cacheRules.get(0), CacheRuleBO.class);
+        List<OldCacheRule> oldCacheRules =
+                oldCacheRuleRepository.queryByMockRuleId(mockRuleId);
+        if (CollectionUtils.isNotEmpty(oldCacheRules)) {
+            return BeanUtils.copyProperties(oldCacheRules.get(0), CacheRuleBO.class);
         }
         return null;
     }

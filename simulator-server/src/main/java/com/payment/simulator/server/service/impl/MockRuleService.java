@@ -12,18 +12,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.server.bo.CacheRuleBO;
 import com.payment.simulator.server.bo.MockContext;
 import com.payment.simulator.server.bo.MockRuleBO;
-import com.payment.simulator.server.bo.response.MockRuleResponse;
 import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
-import com.payment.simulator.server.entity.MockRule;
+import com.payment.simulator.server.entity.HitRule;
+import com.payment.simulator.server.entity.OldMockRule;
 import com.payment.simulator.server.enums.CacheOptionEnum;
-import com.payment.simulator.server.repository.MockRuleRepository;
+import com.payment.simulator.server.repository.HitRuleRepository;
+import com.payment.simulator.server.repository.OldMockRuleRepository;
 import com.payment.simulator.server.service.TemplateService;
-import com.payment.simulator.server.template.MockTemplateInterface;
 import com.payment.simulator.server.util.JSONUtil;
 import com.payment.simulator.server.util.RequestPathUtil;
 import com.payment.simulator.server.util.VelocityService;
-import com.payment.simulator.common.dto.response.BasePaginationResponse;
 import com.payment.simulator.common.exception.PaymentException;
 import com.payment.simulator.common.utils.BeanUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +48,9 @@ import static com.payment.simulator.common.exception.ErrorCode.VALIDATE_ERROR;
 public class MockRuleService {
 
     @Autowired
-    private MockRuleRepository mockRuleRepository;
+    private HitRuleRepository hitRuleRepository;
+    @Autowired
+    private OldMockRuleRepository oldMockRuleRepository;
 
     @Autowired
     private CacheRuleService cacheRuleService;
@@ -66,24 +67,21 @@ public class MockRuleService {
 
     public ResponseEntity mockData(MockContext mockContext) {
         //匹配主mock模板
-        MockRuleBO mockRule = matchMockRule(mockContext);
-        if (mockRule == null) {
+        HitRule hitRule = queryMatchedMockRuld(mockContext.getChannelId(),
+                mockContext.getRequestPath(),
+                mockContext.getRequestMethod(),
+                mockContext.getContentType());
+        if (hitRule == null) {
             throw new PaymentException(VALIDATE_ERROR, "未匹配到mock_rule");
         }
-        //根据templateCode路由
-        if (StringUtils.isNotEmpty(mockRule.getTemplateCode())) {
-            MockTemplateInterface templateServiceImpl = templateService.getTemplateMap().get(mockRule.getTemplateCode());
-            if (templateServiceImpl != null) {
-                return templateServiceImpl.mockData(mockContext);
-            }
-        }
-        //匹配缓存模板mock
-        CacheRuleBO cacheRule = cacheRuleService.queryCacheRuleByMockId(mockRule.getId());
-        if (cacheRule != null) {
-            return executeCacheRuleMock(cacheRule, mockContext);
-        }
+        //todo
+//        //匹配缓存模板mock
+//        CacheRuleBO cacheRule = cacheRuleService.queryCacheRuleByMockId(hitRule.getId());
+//        if (cacheRule != null) {
+//            return executeCacheRuleMock(cacheRule, mockContext);
+//        }
         //执行Mock规则模板mock
-        return executeMainRuleMock(mockRule, mockContext);
+        return executeMainRuleMock(hitRule, mockContext);
     }
 
     /**
@@ -101,23 +99,6 @@ public class MockRuleService {
             throw new PaymentException(VALIDATE_ERROR, "执行超时规则解析status code异常");
         }
         return new ResponseEntity<>(HttpStatus.GATEWAY_TIMEOUT);
-    }
-
-    /**
-     * 匹配主mockRule
-     *
-     * @param mockContext
-     * @return
-     */
-    private MockRuleBO matchMockRule(MockContext mockContext) {
-        //查询
-        List<MockRuleBO> mockRules = queryMatchedMockRuld(mockContext.getChannelId(), mockContext.getRequestPath(), mockContext.getRequestMethod(), mockContext.getContentType());
-        //先匹配有规则的模板，否则匹配无规则的模板
-        Optional<MockRuleBO> optional = mockRules.stream().map(mockRuleBO -> {
-            dealPathValue(mockRuleBO, mockContext);
-            return mockRuleBO;
-        }).filter(mockRuleBO -> this.reqMatchResult(mockRuleBO, mockContext)).findFirst();
-        return optional.orElse(null);
     }
 
     /**
@@ -152,17 +133,20 @@ public class MockRuleService {
     /**
      * 主rule渲染
      *
-     * @param mockRule
+     * @param hitRule
      * @param mockContext
      * @return
      */
-    private ResponseEntity executeMainRuleMock(MockRuleBO mockRule, MockContext mockContext) {
+    private ResponseEntity executeMainRuleMock(HitRule hitRule,
+                                               MockContext mockContext) {
         //超时状态优先mock
-        if (StringUtils.contains(mockRule.getStatusCode(), Constant.STATUS_CODE_TIMEOUT)) {
-            return executeTimeoutMock(mockRule.getStatusCode());
+        if (StringUtils.contains(hitRule.getResponseCode(), Constant.STATUS_CODE_TIMEOUT)) {
+            return executeTimeoutMock(hitRule.getResponseCode());
         }
-        String response = velocityService.assignValue(mockContext, mockRule.getResponseTemplate());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(mockRule.getStatusCode())));
+        String response = velocityService.assignValue(mockContext,
+                hitRule.getResponse());
+        return new ResponseEntity<>(response,
+                HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
     }
 
     /**
@@ -242,9 +226,10 @@ public class MockRuleService {
      * @param contentType
      * @return
      */
-    public List<MockRuleBO> queryMatchedMockRuld(String channelId, String requestUrl, String requestMethod, String contentType) {
-        List<MockRule> mockRules =
-                mockRuleRepository.findByChannelIdAndPathAndRequestMethodAndContentType(channelId, requestUrl, requestMethod, contentType);
+    public HitRule queryMatchedMockRuld(String channelId, String requestUrl, String requestMethod, String contentType) {
+        List<HitRule> hitRules =
+                hitRuleRepository.findByChannelIdAndPathAndRequestMethodAndContentType(channelId, requestUrl, requestMethod,
+                contentType);
 
 //        if (CollectionUtils.isEmpty(mockRules)) {
 //            mockRules = mockRuleMapper.queryMockRegPathRule(channelId, requestMethod, contentType);
@@ -252,26 +237,27 @@ public class MockRuleService {
 //                mockRules = mockRules.stream().filter(d -> RequestPathUtil.matcherUrl(requestUrl, d.getPath())).collect(Collectors.toList());
 //            }
 //        }
-        if (CollectionUtils.isEmpty(mockRules)) {
-            throw new PaymentException(VALIDATE_ERROR, "未查询到mock_rule规则配置");
+        if (CollectionUtils.isEmpty(hitRules)) {
+            throw new PaymentException(VALIDATE_ERROR, "未查询到hit_rule规则配置");
         }
-        Optional<MockRule> nullMockRule = mockRules.stream().filter(mockRule -> StringUtils.isEmpty(mockRule.getReqMatchRule())).findFirst();
-        //reqMatchRule为空的放在最下面
-        if (nullMockRule.isPresent()){
-            mockRules.remove(nullMockRule.get());
-            mockRules.add(nullMockRule.get());
-        }
-        return mockRules.stream().map(mockRule -> {
-            mockRule.setReqMatchRule(StringUtils.defaultIfBlank(mockRule.getReqMatchRule(), null));
-            return BeanUtils.copyProperties(mockRule, MockRuleBO.class);
-        }).collect(Collectors.toList());
+//        Optional<OldMockRule> nullMockRule = oldMockRules.stream().filter(oldMockRule -> StringUtils.isEmpty(oldMockRule.getReqMatchRule())).findFirst();
+//        //reqMatchRule为空的放在最下面
+//        if (nullMockRule.isPresent()){
+//            oldMockRules.remove(nullMockRule.get());
+//            oldMockRules.add(nullMockRule.get());
+//        }
+//        return oldMockRules.stream().map(oldMockRule -> {
+//            oldMockRule.setReqMatchRule(StringUtils.defaultIfBlank(oldMockRule.getReqMatchRule(), null));
+//            return BeanUtils.copyProperties(oldMockRule, MockRuleBO.class);
+//        }).collect(Collectors.toList());
+        return hitRules.get(0);
     }
 
 
-    public MockRule insertMockRule(MockRule mockRule) {
-        mockRule.setId(UUID.randomUUID().toString());
-        mockRule.setCreated(new Date());
-        return mockRuleRepository.save(mockRule);
+    public OldMockRule insertMockRule(OldMockRule oldMockRule) {
+        oldMockRule.setId(UUID.randomUUID().toString());
+        oldMockRule.setCreated(new Date());
+        return oldMockRuleRepository.save(oldMockRule);
     }
 
 //    public BasePaginationResponse<MockRuleResponse> queryMockRules(MockRuleQuery mockRuleQuery) {
@@ -283,15 +269,15 @@ public class MockRuleService {
 //        return pagenationResponse;
 //    }
 
-    public void updateMockRule(MockRule mockRule) {
-        if (StringUtils.isEmpty(mockRule.getId())) {
+    public void updateMockRule(OldMockRule oldMockRule) {
+        if (StringUtils.isEmpty(oldMockRule.getId())) {
             throw new PaymentException(PARAM_ERROR, "id是必填的");
         }
-        mockRule.setUpdated(new Date());
-        mockRuleRepository.save(mockRule);
+        oldMockRule.setUpdated(new Date());
+        oldMockRuleRepository.save(oldMockRule);
     }
 
     public void delteMockRule(String id) {
-        mockRuleRepository.deleteById(id);
+        oldMockRuleRepository.deleteById(id);
     }
 }
