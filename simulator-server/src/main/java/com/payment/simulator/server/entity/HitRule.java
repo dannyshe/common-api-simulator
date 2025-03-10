@@ -34,11 +34,11 @@ public class HitRule {
     @Column(name = "action_id")
     private String actionId;
     
-    @Column(name = "cache_key")
-    private String cacheKey;
+    @Column(name = "generate_id_script", columnDefinition = "text")
+    private String generateIdScript;
     
     @Column(name = "cache_ttl")
-    private Integer cacheTtl;
+    private Integer cacheTTLHours;
     
     @Column(name = "response_code")
     private String responseCode;

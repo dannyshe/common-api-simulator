@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import com.payment.simulator.server.util.ObjectIdUitl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -162,100 +162,109 @@ public class SimulateService {
 
         ActionTypeEnum actionType = ActionTypeEnum.fromString(hitRule.getActionType());
         String actionId = hitRule.getActionId();
-        if(StringUtils.isNotEmpty(actionId)){
-            switch (actionType){
-                case ASSEMBLE_ONLY -> {
-                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
+        switch (actionType){
+            case ASSEMBLE_ONLY -> {
+                //do nothing, apply the default ASSEMBLE_ONLY logic
+            }
+            case ASSEMBLE_AND_CACHE -> {
+                if(StringUtils.isNotEmpty(hitRule.getGenerateIdScript()) && hitRule.getCacheTTLHours() > 0){
+                    String objectId = GroovyScriptEngine.generateObjectId(simulateContext, hitRule.getGenerateIdScript());
+                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), objectId);
+                    if (!StringUtils.isEmpty(objectId)) {
+                        cacheService.save(objectId, response, hitRule.getCacheTTLHours());
+                    }
                     return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
+                }else {
+                    //do nothing, apply the default ASSEMBLE_ONLY logic
                 }
-                case ASSEMBLE_AND_CACHE -> {
-                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
-                    //todo save to cache
-                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
-                }
-                case QUERY_CACHE -> {
-                    //query from cache
-                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                    //return new ResponseEntity<>(response,
-                    //        HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
-                }
-                case UPDATE_CACHE -> {
-                    //udpate cache
-                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                    //return new ResponseEntity<>(response,
-                    //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
-                }
-                case DELETE_CACHE -> {
-                    //delete cache
-                    //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                    //return new ResponseEntity<>(response,
-                    //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
-                }
+            }
+            case QUERY_CACHE -> {
+                //query from cache
+                //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                //return new ResponseEntity<>(response,
+                //        HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+            }
+            case UPDATE_CACHE -> {
+                //udpate cache
+                //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                //return new ResponseEntity<>(response,
+                //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+            }
+            case DELETE_CACHE -> {
+                //delete cache
+                //String response = CacheService.query(simulateContext, hitRule.getResponse());
+                //return new ResponseEntity<>(response,
+                //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+            }
+            default -> {
+                //do nothing, apply the default ASSEMBLE_ONLY logic
             }
         }
 
         //default action - ASSEMBLE_ONLY
-        String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
+        String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), null);
         return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
     }
 
-    /**
-     * 缓存rule渲染
-     *
-     * @param cacheRule
-     * @param simulateContext
-     * @return
-     */
-    private ResponseEntity executeCacheRuleMock(CacheRuleBO cacheRule, SimulateContext simulateContext) {
-        //获取key
-        String cacheKey = getCacheKey(simulateContext, cacheRule);
-        String data = redisTemplate.boundValueOps(cacheKey).get();
-        //所有操作前均先查一下cacheBody
-        if (StringUtils.isNotEmpty(data)) {
-            simulateContext.setCacheBody(JSON.parseObject(data));
-        }
-        //判断是否有要执行的缓存判断脚本
-        if (StringUtils.isNotEmpty(cacheRule.getCacheBodyMatchRule())) {
-            try {
-                Boolean result = GroovyScriptEngine.executeGroovyScript(simulateContext, cacheRule.getCacheBodyMatchRule());
-                if (Boolean.FALSE.equals(result)) {
-                    //优先执行超时任务
-                    return new ResponseEntity<>(velocityService.assignValue(simulateContext, cacheRule.getMatchErrorResponseTemplate()), HttpStatus.valueOf(Integer.valueOf(cacheRule.getMatchErrorStatusCode())));
-                }
-            } catch (Exception e) {
-                log.error("[MockRuleServiceImpl] excuteCacheRuleMock error", e);
-                throw new SimulateException(SERVER_ERROR, "执行缓存规则mock异常");
-            }
-        }
-        //无判断脚本或者脚本match通过
-        String template = null;
-        String statusCode = null;
-        //put操作
-        if (CacheOptionEnum.PUT.equals(CacheOptionEnum.getOptionName(cacheRule.getCacheOption()))) {
-            //put方法不执行后面的模板操作
-            redisTemplate.boundValueOps(cacheKey).set(velocityService.assignValue(simulateContext, cacheRule.getCacheBody()), cacheRule.getCacheTime(), TimeUnit.SECONDS);
-            template = cacheRule.getResponseTemplate();
-            statusCode = cacheRule.getMatchStatusCode();
-        }
-        //get根据数据判断是response模板还是null_response模板
-        if (CacheOptionEnum.GET.equals(CacheOptionEnum.getOptionName(cacheRule.getCacheOption()))) {
-            if (data == null) {
-                template = cacheRule.getNullResponseTemplate();
-                statusCode = cacheRule.getNullMatchStatusCode();
-            } else {
-                template = cacheRule.getResponseTemplate();
-                statusCode = cacheRule.getMatchStatusCode();
-            }
-        }
-        //优先执行超时任务
-        if (StringUtils.contains(statusCode, Constant.RESPONSE_CODE_TIMEOUT)) {
-            handleTimeout(statusCode);
-        }
-        if (StringUtils.isEmpty(template)) {
-            return new ResponseEntity<>(HttpStatus.valueOf(Integer.parseInt(statusCode)));
-        }
-        return new ResponseEntity<>(velocityService.assignValue(simulateContext, template), HttpStatus.valueOf(Integer.valueOf(statusCode)));
-    }
+//    /**
+//     * 缓存rule渲染
+//     *
+//     * @param cacheRule
+//     * @param simulateContext
+//     * @return
+//     */
+//    private ResponseEntity executeCacheRuleMock(CacheRuleBO cacheRule, SimulateContext simulateContext) {
+//        //获取key
+//        String cacheKey = getCacheKey(simulateContext, cacheRule);
+//        String data = redisTemplate.boundValueOps(cacheKey).get();
+//        //所有操作前均先查一下cacheBody
+//        if (StringUtils.isNotEmpty(data)) {
+//            simulateContext.setCacheBody(JSON.parseObject(data));
+//        }
+//        //判断是否有要执行的缓存判断脚本
+//        if (StringUtils.isNotEmpty(cacheRule.getCacheBodyMatchRule())) {
+//            try {
+//                Boolean result = GroovyScriptEngine.executeGroovyScript(simulateContext, cacheRule.getCacheBodyMatchRule());
+//                if (Boolean.FALSE.equals(result)) {
+//                    //优先执行超时任务
+//                    return new ResponseEntity<>(velocityService.assignValue(simulateContext,
+//                            cacheRule.getMatchErrorResponseTemplate()),
+//                            HttpStatus.valueOf(Integer.valueOf(cacheRule.getMatchErrorStatusCode())), null);
+//                }
+//            } catch (Exception e) {
+//                log.error("[MockRuleServiceImpl] excuteCacheRuleMock error", e);
+//                throw new SimulateException(SERVER_ERROR, "执行缓存规则mock异常");
+//            }
+//        }
+//        //无判断脚本或者脚本match通过
+//        String template = null;
+//        String statusCode = null;
+//        //put操作
+//        if (CacheOptionEnum.PUT.equals(CacheOptionEnum.getOptionName(cacheRule.getCacheOption()))) {
+//            //put方法不执行后面的模板操作
+//            redisTemplate.boundValueOps(cacheKey).set(velocityService.assignValue(simulateContext, cacheRule.getCacheBody()), cacheRule.getCacheTime(), TimeUnit.SECONDS);
+//            template = cacheRule.getResponseTemplate();
+//            statusCode = cacheRule.getMatchStatusCode();
+//        }
+//        //get根据数据判断是response模板还是null_response模板
+//        if (CacheOptionEnum.GET.equals(CacheOptionEnum.getOptionName(cacheRule.getCacheOption()))) {
+//            if (data == null) {
+//                template = cacheRule.getNullResponseTemplate();
+//                statusCode = cacheRule.getNullMatchStatusCode();
+//            } else {
+//                template = cacheRule.getResponseTemplate();
+//                statusCode = cacheRule.getMatchStatusCode();
+//            }
+//        }
+//        //优先执行超时任务
+//        if (StringUtils.contains(statusCode, Constant.RESPONSE_CODE_TIMEOUT)) {
+//            handleTimeout(statusCode);
+//        }
+//        if (StringUtils.isEmpty(template)) {
+//            return new ResponseEntity<>(HttpStatus.valueOf(Integer.parseInt(statusCode)));
+//        }
+//        return new ResponseEntity<>(velocityService.assignValue(simulateContext, template), HttpStatus.valueOf(Integer.valueOf(statusCode)));
+//    }
 
     private String getCacheKey(SimulateContext simulateContext, CacheRuleBO cacheRuleBO) {
         StringBuilder keyStringBuffer = new StringBuilder();

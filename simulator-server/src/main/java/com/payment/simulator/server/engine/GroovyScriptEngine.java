@@ -45,6 +45,16 @@ public  class GroovyScriptEngine {
         }
     }
 
+    public static String generateObjectId(SimulateContext context, String script){
+        try {
+            SCRIPT_ENGINE.eval(script,makeBindings(context));
+            return (String) ((Invocable) SCRIPT_ENGINE).invokeFunction(Constant.METHOD_NAME);
+        } catch (ScriptException | NoSuchMethodException e) {
+            log.info("executeGroovyScript script:{}",script);
+            throw new SimulateException(ErrorCode.SERVER_ERROR,"执行脚本异常");
+        }
+    }
+
     private static Bindings makeBindings(SimulateContext context) {
         Bindings bindings = new SimpleBindings();
         bindings.put(ENV_CONTEXT, context);

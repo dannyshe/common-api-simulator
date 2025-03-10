@@ -7,11 +7,13 @@ import com.payment.simulator.server.repository.OldCacheRuleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -24,6 +26,11 @@ public class CacheService {
 
     @Autowired
     private OldCacheRuleRepository oldCacheRuleRepository;
+
+    @Autowired
+    protected RedisTemplate<String, String> redisTemplate;
+
+
 
 //    @Override
 //    public BasePaginationResponse<CacheRuleResponse> queryCacheRules(CacheRuleQuery cacheRuleQuery) {
@@ -58,5 +65,13 @@ public class CacheService {
             return BeanUtils.copyProperties(oldCacheRules.get(0), CacheRuleBO.class);
         }
         return null;
+    }
+
+    public void save(String objectId, String response, Integer cacheTTLHours) {
+        redisTemplate.boundValueOps(objectId).set(response, cacheTTLHours, TimeUnit.HOURS);
+    }
+
+    public String query(String objectId) {
+        return redisTemplate.boundValueOps(objectId).get();
     }
 }

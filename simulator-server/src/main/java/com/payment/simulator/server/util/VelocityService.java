@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.server.bo.SimulateContext;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
@@ -38,7 +39,7 @@ public class VelocityService {
         velocityEngine = new VelocityEngine(props);
     }
 
-    public String assignValue(SimulateContext simulateContext, String template) {
+    public String assignValue(SimulateContext simulateContext, String template, String id) {
         // 取得velocity的上下文context
         log.info("[assignValue]context:{}", JSONObject.toJSONString(simulateContext));
         log.info("[assignValue]response template:{}", template);
@@ -49,6 +50,9 @@ public class VelocityService {
             context.put((String) entry.getKey(), entry.getValue());
         }
         context.put("now", new Date());
+        if(StringUtils.isNotBlank(id)) {
+            context.put("id", id);
+        }
         context.put("date", new DateTool());
         context.put("uuid", UUID.randomUUID().toString());
         velocityEngine.evaluate(context, stringWriter, "", template);
