@@ -1,5 +1,6 @@
 package com.payment.simulator.server.service.impl;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -133,10 +134,16 @@ public class SimulateService {
     private ResponseEntity handleDefaultLogic(HitRule hitRule, SimulateContext simulateContext) {
 
         String responseCode = hitRule.getResponseCode();
-        if (responseCode.contains(Constant.RESPONSE_CODE_TIMEOUT)) {
-            //handle timeout response code
-            handleTimeout(hitRule.getResponseCode());
-        }else if(!responseCode.equals("200") && !responseCode.equals("201")){
+        if(responseCode.contains("|")){
+            List<String> codes = Arrays.stream(responseCode.split("\\|")).toList();
+            responseCode = codes.get(codes.size() - 1);
+            String actionCode = codes.get(0);
+            if (actionCode.contains(Constant.RESPONSE_CODE_TIMEOUT)) {
+                //handle timeout response code
+                handleTimeout(actionCode);
+            }
+        }
+        if(!responseCode.equals("200") && !responseCode.equals("201")){
             //handle abnormal response code
             try {
                 int statusCode = Integer.parseInt(responseCode);
@@ -159,12 +166,12 @@ public class SimulateService {
             switch (actionType){
                 case ASSEMBLE_ONLY -> {
                     String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
-                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
                 }
                 case ASSEMBLE_AND_CACHE -> {
                     String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
                     //todo save to cache
-                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
                 }
                 case QUERY_CACHE -> {
                     //query from cache
@@ -189,7 +196,7 @@ public class SimulateService {
 
         //default action - ASSEMBLE_ONLY
         String response = velocityService.assignValue(simulateContext, hitRule.getResponse());
-        return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+        return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
     }
 
     /**
