@@ -32,7 +32,7 @@ public class HitRule {
     private String actionType;
     
     @Column(name = "action_id")
-    private String actionId;
+    private Integer actionId;
     
     @Column(name = "generate_id_script", columnDefinition = "text")
     private String generateIdScript;

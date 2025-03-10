@@ -14,8 +14,8 @@ public class QueryCacheAction {
     @Id
     private Integer id;
     
-    @Column(name = "query_key")
-    private String queryKey;
+    @Column(name = "query_key_script")
+    private String queryKeyScript;
     
     @Column(name = "response_code")
     private String responseCode;

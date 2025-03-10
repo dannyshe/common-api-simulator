@@ -1,4 +1,3 @@
-import com.payment.simulator.common.utils.ObjectIdUtil
 
 def generateId(context) {
     def channelId = context.get("channelId")

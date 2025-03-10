@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -161,7 +162,6 @@ public class SimulateService {
         }
 
         ActionTypeEnum actionType = ActionTypeEnum.fromString(hitRule.getActionType());
-        String actionId = hitRule.getActionId();
         switch (actionType){
             case ASSEMBLE_ONLY -> {
                 //do nothing, apply the default ASSEMBLE_ONLY logic
@@ -173,16 +173,20 @@ public class SimulateService {
                     if (!StringUtils.isEmpty(objectId)) {
                         cacheService.save(objectId, response, hitRule.getCacheTTLHours());
                     }
-                    return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
+                    return ResponseEntity
+                            .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                            .contentType(MediaType.valueOf(hitRule.getContentType()))
+                            .body(response);
                 }else {
                     //do nothing, apply the default ASSEMBLE_ONLY logic
                 }
             }
             case QUERY_CACHE -> {
                 //query from cache
-                //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                //return new ResponseEntity<>(response,
-                //        HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                return ResponseEntity
+                        .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                        .contentType(MediaType.valueOf(hitRule.getContentType()))
+                        .body(cacheService.query(simulateContext, hitRule));
             }
             case UPDATE_CACHE -> {
                 //udpate cache
@@ -203,7 +207,10 @@ public class SimulateService {
 
         //default action - ASSEMBLE_ONLY
         String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), null);
-        return new ResponseEntity<>(response, HttpStatus.valueOf(Integer.parseInt(responseCode)));
+        return ResponseEntity
+                .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                .contentType(MediaType.valueOf(hitRule.getContentType()))
+                .body(response);
     }
 
 //    /**

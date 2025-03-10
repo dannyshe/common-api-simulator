@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface QueryCacheActionRepository extends JpaRepository<QueryCacheAction, Integer> {
-    Optional<QueryCacheAction> findByQueryKey(String queryKey);
 }

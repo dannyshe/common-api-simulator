@@ -1,11 +1,19 @@
 package com.payment.simulator.server.service.impl;
 
+import com.payment.simulator.common.exception.SimulateException;
 import com.payment.simulator.server.bo.CacheRuleBO;
+import com.payment.simulator.server.bo.SimulateContext;
+import com.payment.simulator.server.engine.GroovyScriptEngine;
+import com.payment.simulator.server.entity.HitRule;
 import com.payment.simulator.server.entity.OldCacheRule;
 import com.payment.simulator.common.utils.BeanUtils;
+import com.payment.simulator.server.entity.QueryCacheAction;
 import com.payment.simulator.server.repository.OldCacheRuleRepository;
+import com.payment.simulator.server.repository.QueryCacheActionRepository;
+import com.payment.simulator.server.util.VelocityService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -14,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import static com.payment.simulator.common.exception.ErrorCode.SERVER_ERROR;
 
 /**
  * 
@@ -28,9 +38,13 @@ public class CacheService {
     private OldCacheRuleRepository oldCacheRuleRepository;
 
     @Autowired
+    private VelocityService velocityService;
+
+    @Autowired
     protected RedisTemplate<String, String> redisTemplate;
 
-
+    @Autowired
+    private QueryCacheActionRepository queryCacheActionRepository;
 
 //    @Override
 //    public BasePaginationResponse<CacheRuleResponse> queryCacheRules(CacheRuleQuery cacheRuleQuery) {
@@ -71,7 +85,19 @@ public class CacheService {
         redisTemplate.boundValueOps(objectId).set(response, cacheTTLHours, TimeUnit.HOURS);
     }
 
-    public String query(String objectId) {
-        return redisTemplate.boundValueOps(objectId).get();
+    public Object query(SimulateContext simulateContext, HitRule hitRule) {
+        QueryCacheAction queryCacheAction = queryCacheActionRepository.findById(hitRule.getActionId()).get();
+        if (queryCacheAction == null) {
+            throw new SimulateException(SERVER_ERROR, "QueryCacheAction not found with id: " +  hitRule.getActionId());
+        }
+        String objectId = GroovyScriptEngine.generateObjectId(simulateContext, queryCacheAction.getQueryKeyScript());
+        String response = redisTemplate.boundValueOps(objectId).get();
+        if(StringUtils.isEmpty(response)){
+            return velocityService.assignValue(simulateContext, queryCacheAction.getNotfoundResponse(), null);
+        }
+
+        return response;
     }
+
+
 }
