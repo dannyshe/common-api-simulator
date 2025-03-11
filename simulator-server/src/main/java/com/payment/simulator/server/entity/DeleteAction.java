@@ -14,8 +14,8 @@ public class DeleteAction {
     @Id
     private Integer id;
     
-    @Column(name = "delete_key")
-    private String deleteKey;
+    @Column(name = "delete_key_script")
+    private String deleteKeyScript;
     
     @Column(name = "delete_condition", columnDefinition = "text")
     private String deleteCondition;

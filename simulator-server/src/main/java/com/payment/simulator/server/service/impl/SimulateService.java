@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import com.payment.simulator.server.util.ObjectIdUitl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -15,10 +14,11 @@ import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
 import com.payment.simulator.server.entity.HitRule;
 import com.payment.simulator.server.entity.OldMockRule;
+import com.payment.simulator.server.entity.SaveAction;
 import com.payment.simulator.server.enums.ActionTypeEnum;
-import com.payment.simulator.server.enums.CacheOptionEnum;
 import com.payment.simulator.server.repository.HitRuleRepository;
 import com.payment.simulator.server.repository.OldMockRuleRepository;
+import com.payment.simulator.server.repository.SaveActionRepository;
 import com.payment.simulator.server.util.JSONUtil;
 import com.payment.simulator.server.util.RequestPathUtil;
 import com.payment.simulator.server.util.VelocityService;
@@ -49,33 +49,21 @@ public class SimulateService {
     private HitRuleRepository hitRuleRepository;
     @Autowired
     private OldMockRuleRepository oldMockRuleRepository;
-
     @Autowired
     private CacheService cacheService;
-
-    @Autowired
-    protected RedisTemplate<String, String> redisTemplate;
-
     @Autowired
     private VelocityService velocityService;
-
     private final static String DEFAULT_ERROR_RESPONSE = "Error Response Code Matched.";
 
 
     public ResponseEntity execute(SimulateContext simulateContext) {
+        //todo - update the request url if necessary
         HitRule hitRule = queryMatchedMockRuld(simulateContext.getChannelId(), simulateContext.getRequestPath(),
                 simulateContext.getRequestMethod(), simulateContext.getContentType());
         if (hitRule == null) {
             throw new SimulateException(VALIDATE_ERROR, "hit_rule not found");
         }
-        //todo
-//        //匹配缓存模板mock
-//        CacheRuleBO cacheRule = cacheRuleService.queryCacheRuleByMockId(hitRule.getId());
-//        if (cacheRule != null) {
-//            return executeCacheRuleMock(cacheRule, mockContext);
-//        }
-        //执行Mock规则模板mock
-        return handleDefaultLogic(hitRule, simulateContext);
+        return handleSimulateLogic(hitRule, simulateContext);
     }
 
     /**
@@ -132,10 +120,10 @@ public class SimulateService {
      * @param simulateContext
      * @return
      */
-    private ResponseEntity handleDefaultLogic(HitRule hitRule, SimulateContext simulateContext) {
+    private ResponseEntity handleSimulateLogic(HitRule hitRule, SimulateContext simulateContext) {
 
         String responseCode = hitRule.getResponseCode();
-        if(responseCode.contains("|")){
+        if (responseCode.contains("|")) {
             List<String> codes = Arrays.stream(responseCode.split("\\|")).toList();
             responseCode = codes.get(codes.size() - 1);
             String actionCode = codes.get(0);
@@ -144,7 +132,7 @@ public class SimulateService {
                 handleTimeout(actionCode);
             }
         }
-        if(!responseCode.equals("200") && !responseCode.equals("201")){
+        if (!responseCode.equals("200") && !responseCode.equals("201")) {
             //handle abnormal response code
             try {
                 int statusCode = Integer.parseInt(responseCode);
@@ -162,24 +150,15 @@ public class SimulateService {
         }
 
         ActionTypeEnum actionType = ActionTypeEnum.fromString(hitRule.getActionType());
-        switch (actionType){
+        switch (actionType) {
             case ASSEMBLE_ONLY -> {
                 //do nothing, apply the default ASSEMBLE_ONLY logic
             }
             case ASSEMBLE_AND_CACHE -> {
-                if(StringUtils.isNotEmpty(hitRule.getGenerateIdScript()) && hitRule.getCacheTTLHours() > 0){
-                    String objectId = GroovyScriptEngine.generateObjectId(simulateContext, hitRule.getGenerateIdScript());
-                    String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), objectId);
-                    if (!StringUtils.isEmpty(objectId)) {
-                        cacheService.save(objectId, response, hitRule.getCacheTTLHours());
-                    }
-                    return ResponseEntity
-                            .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
-                            .contentType(MediaType.valueOf(hitRule.getContentType()))
-                            .body(response);
-                }else {
-                    //do nothing, apply the default ASSEMBLE_ONLY logic
-                }
+                return ResponseEntity
+                        .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                        .contentType(MediaType.valueOf(hitRule.getContentType()))
+                        .body(cacheService.assembleAndSave(simulateContext, hitRule));
             }
             case QUERY_CACHE -> {
                 //query from cache
@@ -189,16 +168,18 @@ public class SimulateService {
                         .body(cacheService.query(simulateContext, hitRule));
             }
             case UPDATE_CACHE -> {
-                //udpate cache
-                //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                //return new ResponseEntity<>(response,
-                //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                //delete record from cache
+                return ResponseEntity
+                        .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                        .contentType(MediaType.valueOf(hitRule.getContentType()))
+                        .body(cacheService.delete(simulateContext, hitRule));
             }
             case DELETE_CACHE -> {
                 //delete cache
-                //String response = CacheService.query(simulateContext, hitRule.getResponse());
-                //return new ResponseEntity<>(response,
-                //HttpStatus.valueOf(Integer.parseInt(hitRule.getResponseCode())));
+                return ResponseEntity
+                        .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                        .contentType(MediaType.valueOf(hitRule.getContentType()))
+                        .body(cacheService.delete(simulateContext, hitRule));
             }
             default -> {
                 //do nothing, apply the default ASSEMBLE_ONLY logic

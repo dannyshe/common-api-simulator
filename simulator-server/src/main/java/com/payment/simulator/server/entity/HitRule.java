@@ -34,12 +34,6 @@ public class HitRule {
     @Column(name = "action_id")
     private Integer actionId;
     
-    @Column(name = "generate_id_script", columnDefinition = "text")
-    private String generateIdScript;
-    
-    @Column(name = "cache_ttl")
-    private Integer cacheTTLHours;
-    
     @Column(name = "response_code")
     private String responseCode;
     

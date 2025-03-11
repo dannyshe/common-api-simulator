@@ -4,18 +4,21 @@ import com.payment.simulator.common.exception.SimulateException;
 import com.payment.simulator.server.bo.CacheRuleBO;
 import com.payment.simulator.server.bo.SimulateContext;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
-import com.payment.simulator.server.entity.HitRule;
-import com.payment.simulator.server.entity.OldCacheRule;
+import com.payment.simulator.server.entity.*;
 import com.payment.simulator.common.utils.BeanUtils;
-import com.payment.simulator.server.entity.QueryCacheAction;
+import com.payment.simulator.server.repository.DeleteActionRepository;
 import com.payment.simulator.server.repository.OldCacheRuleRepository;
 import com.payment.simulator.server.repository.QueryCacheActionRepository;
+import com.payment.simulator.server.repository.SaveActionRepository;
 import com.payment.simulator.server.util.VelocityService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -46,6 +49,12 @@ public class CacheService {
     @Autowired
     private QueryCacheActionRepository queryCacheActionRepository;
 
+    @Autowired
+    private DeleteActionRepository deleteActionRepository;
+
+    @Autowired
+    private SaveActionRepository saveActionRepository;
+
 //    @Override
 //    public BasePaginationResponse<CacheRuleResponse> queryCacheRules(CacheRuleQuery cacheRuleQuery) {
 //        Integer count = cacheRuleMapper.queryCount(cacheRuleQuery);
@@ -73,16 +82,37 @@ public class CacheService {
     }
 
     public CacheRuleBO queryCacheRuleByMockId(String mockRuleId) {
-        List<OldCacheRule> oldCacheRules =
-                oldCacheRuleRepository.queryByMockRuleId(mockRuleId);
+        List<OldCacheRule> oldCacheRules = oldCacheRuleRepository.queryByMockRuleId(mockRuleId);
         if (CollectionUtils.isNotEmpty(oldCacheRules)) {
             return BeanUtils.copyProperties(oldCacheRules.get(0), CacheRuleBO.class);
         }
         return null;
     }
 
-    public void save(String objectId, String response, Integer cacheTTLHours) {
-        redisTemplate.boundValueOps(objectId).set(response, cacheTTLHours, TimeUnit.HOURS);
+    public String assembleAndSave(SimulateContext simulateContext, HitRule hitRule) {
+        SaveAction saveAction = saveActionRepository.findById(hitRule.getActionId()).get();
+
+        String objectId = GroovyScriptEngine.generateObjectId(simulateContext, saveAction.getGenerateKeyScript());
+        String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), objectId);
+        if (StringUtils.isNotEmpty(saveAction.getGenerateKeyScript()) && saveAction.getCacheTtlHours() > 0) {
+            if (!StringUtils.isEmpty(objectId)) {
+                redisTemplate.boundValueOps(objectId).set(response, saveAction.getCacheTtlHours(), TimeUnit.HOURS);
+            }
+        }
+        return response;
+    }
+
+    public String delete(SimulateContext simulateContext, HitRule hitRule) {
+        DeleteAction deleteAction = deleteActionRepository.findById(hitRule.getActionId()).get();
+        if (deleteAction == null) {
+            throw new SimulateException(SERVER_ERROR, "DeleteAction not found with id: " +  hitRule.getActionId());
+        }
+        String objectId = GroovyScriptEngine.generateObjectId(simulateContext, deleteAction.getDeleteKeyScript());
+        if(redisTemplate.delete(objectId)){
+            return velocityService.assignValue(simulateContext, deleteAction.getResponse(), null);
+        }else{
+            return velocityService.assignValue(simulateContext, deleteAction.getNotfoundResponse(), null);
+        }
     }
 
     public Object query(SimulateContext simulateContext, HitRule hitRule) {
