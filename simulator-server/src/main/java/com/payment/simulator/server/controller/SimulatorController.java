@@ -58,9 +58,9 @@ public class SimulatorController {
         simulateContext.setChannelId(channelId.toLowerCase());
         simulateContext.setRequestMethod(request.getMethod().toUpperCase());
         simulateContext.setContentType(contentType.toLowerCase());
-        simulateContext.setRequestPath(requestURI);
-        simulateContext.setRequestQueryString(request.getQueryString());
-        simulateContext.setRequestParam(RequestParamsToMap.getParameterMap(request));
+        simulateContext.setPath(requestURI);
+        simulateContext.setQueryString(request.getQueryString());
+        simulateContext.setParams(RequestParamsToMap.getParameterMap(request));
         String bodyMessage = new BodyReaderHttpServletRequestWrapper(request).getBody();
         JSONObject requestBody = new JSONObject();
         if (StringUtils.isNotEmpty(bodyMessage)) {
@@ -70,7 +70,7 @@ public class SimulatorController {
                 requestBody = JSONObject.parseObject(bodyMessage);
             }
         }
-        simulateContext.setRequestBody(requestBody);
+        simulateContext.setBody(requestBody);
 
         return simulateContext;
 

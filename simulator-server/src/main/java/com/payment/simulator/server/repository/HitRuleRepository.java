@@ -10,5 +10,5 @@ import java.util.List;
 public interface HitRuleRepository extends JpaRepository<HitRule, Integer> {
     List<HitRule> findByChannelId(String channelId);
     List<HitRule> findByPath(String path);
-    List<HitRule> findByChannelIdAndPathAndRequestMethodAndContentType(String channelId, String path, String requestMethod, String contentType);
+    List<HitRule> findByChannelIdAndRequestMethodAndContentType(String channelId, String requestMethod, String contentType);
 }

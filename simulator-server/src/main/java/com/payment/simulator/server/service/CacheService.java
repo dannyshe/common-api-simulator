@@ -38,9 +38,6 @@ import static com.payment.simulator.common.exception.ErrorCode.SERVER_ERROR;
 public class CacheService {
 
     @Autowired
-    private OldCacheRuleRepository oldCacheRuleRepository;
-
-    @Autowired
     private VelocityService velocityService;
 
     @Autowired
@@ -67,30 +64,6 @@ public class CacheService {
 //        }
 //        return pagenationResponse;
 //    }
-
-    public OldCacheRule insertCacheRule(OldCacheRule oldCacheRule) {
-        oldCacheRule.setId(UUID.randomUUID().toString());
-        oldCacheRule.setCreated(new Date());
-        oldCacheRuleRepository.save(oldCacheRule);
-        return oldCacheRuleRepository.save(oldCacheRule);
-    }
-
-    public void updateCacheRule(OldCacheRule oldCacheRule) {
-        oldCacheRule.setUpdated(new Date());
-        oldCacheRuleRepository.save(oldCacheRule);
-    }
-
-    public void deleteCacheRule(String id) {
-        oldCacheRuleRepository.deleteById(id);
-    }
-
-    public CacheRuleBO queryCacheRuleByMockId(String mockRuleId) {
-        List<OldCacheRule> oldCacheRules = oldCacheRuleRepository.queryByMockRuleId(mockRuleId);
-        if (CollectionUtils.isNotEmpty(oldCacheRules)) {
-            return BeanUtils.copyProperties(oldCacheRules.get(0), CacheRuleBO.class);
-        }
-        return null;
-    }
 
     public String assembleAndSave(SimulateContext simulateContext, HitRule hitRule) {
         SaveAction saveAction = saveActionRepository.findById(hitRule.getActionId()).get();
@@ -203,6 +176,4 @@ public class CacheService {
 
         return response;
     }
-
-
 }

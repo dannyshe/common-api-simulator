@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SimulateContext {
 
-    private String requestPath;
+    private String path;
 
-    private String requestQueryString;
+    private String queryString;
 
-    private JSONObject requestHeader = new JSONObject();
+    private JSONObject headers = new JSONObject();
 
-    private JSONObject requestParam = new JSONObject();
+    private JSONObject params = new JSONObject();
 
-    private JSONObject requestBody = new JSONObject();
+    private JSONObject body = new JSONObject();
 
     private JSONObject cacheBody = new JSONObject();
 
@@ -26,26 +26,26 @@ public class SimulateContext {
     private JSONObject extraData = new JSONObject();
 
     public void setChannelId(String channelId) {
-        requestHeader.put(Constant.CHANNEL_ID, channelId);
+        headers.put(Constant.CHANNEL_ID, channelId);
     }
 
     public void setContentType(String contentType) {
-        requestHeader.put(Constant.CONTENT_TYPE, contentType);
+        headers.put(Constant.CONTENT_TYPE, contentType);
     }
 
     public void setRequestMethod(String requestMethod) {
-        requestHeader.put(Constant.REQUEST_METHOD, requestMethod);
+        headers.put(Constant.REQUEST_METHOD, requestMethod);
     }
 
     public String getChannelId() {
-        return requestHeader.getString(Constant.CHANNEL_ID);
+        return headers.getString(Constant.CHANNEL_ID);
     }
 
     public String getContentType() {
-        return requestHeader.getString(Constant.CONTENT_TYPE);
+        return headers.getString(Constant.CONTENT_TYPE);
     }
 
     public String getRequestMethod() {
-        return requestHeader.getString(Constant.REQUEST_METHOD);
+        return headers.getString(Constant.REQUEST_METHOD);
     }
 }
