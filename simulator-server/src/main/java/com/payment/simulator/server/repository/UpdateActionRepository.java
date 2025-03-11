@@ -8,5 +8,4 @@ import java.util.Optional;
 
 @Repository
 public interface UpdateActionRepository extends JpaRepository<UpdateAction, Integer> {
-    Optional<UpdateAction> findByUpdateKey(String updateKey);
 }

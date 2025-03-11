@@ -1,4 +1,4 @@
-package com.payment.simulator.server.service.impl;
+package com.payment.simulator.server.service;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -14,11 +14,9 @@ import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
 import com.payment.simulator.server.entity.HitRule;
 import com.payment.simulator.server.entity.OldMockRule;
-import com.payment.simulator.server.entity.SaveAction;
 import com.payment.simulator.server.enums.ActionTypeEnum;
 import com.payment.simulator.server.repository.HitRuleRepository;
 import com.payment.simulator.server.repository.OldMockRuleRepository;
-import com.payment.simulator.server.repository.SaveActionRepository;
 import com.payment.simulator.server.util.JSONUtil;
 import com.payment.simulator.server.util.RequestPathUtil;
 import com.payment.simulator.server.util.VelocityService;
@@ -27,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -152,7 +149,11 @@ public class SimulateService {
         ActionTypeEnum actionType = ActionTypeEnum.fromString(hitRule.getActionType());
         switch (actionType) {
             case ASSEMBLE_ONLY -> {
-                //do nothing, apply the default ASSEMBLE_ONLY logic
+                //default logic
+                return ResponseEntity
+                        .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
+                        .contentType(MediaType.valueOf(hitRule.getContentType()))
+                        .body(velocityService.assignValue(simulateContext, hitRule.getResponse(), null));
             }
             case ASSEMBLE_AND_CACHE -> {
                 return ResponseEntity
@@ -172,7 +173,7 @@ public class SimulateService {
                 return ResponseEntity
                         .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
                         .contentType(MediaType.valueOf(hitRule.getContentType()))
-                        .body(cacheService.delete(simulateContext, hitRule));
+                        .body(cacheService.update(simulateContext, hitRule));
             }
             case DELETE_CACHE -> {
                 //delete cache
@@ -182,16 +183,9 @@ public class SimulateService {
                         .body(cacheService.delete(simulateContext, hitRule));
             }
             default -> {
-                //do nothing, apply the default ASSEMBLE_ONLY logic
+                throw new SimulateException(VALIDATE_ERROR, "Invalid action type: " + actionType);
             }
         }
-
-        //default action - ASSEMBLE_ONLY
-        String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), null);
-        return ResponseEntity
-                .status(HttpStatus.valueOf(Integer.parseInt(responseCode)))
-                .contentType(MediaType.valueOf(hitRule.getContentType()))
-                .body(response);
     }
 
 //    /**

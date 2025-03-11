@@ -14,8 +14,8 @@ public class UpdateAction {
     @Id
     private Integer id;
     
-    @Column(name = "update_key")
-    private String updateKey;
+    @Column(name = "update_key_script", columnDefinition = "text")
+    private String updateKeyScript;
     
     @Column(name = "update_rule", columnDefinition = "text")
     private String updateRule;

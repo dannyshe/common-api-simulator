@@ -1,24 +1,24 @@
-package com.payment.simulator.server.service.impl;
+package com.payment.simulator.server.service;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.common.exception.SimulateException;
 import com.payment.simulator.server.bo.CacheRuleBO;
 import com.payment.simulator.server.bo.SimulateContext;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
 import com.payment.simulator.server.entity.*;
 import com.payment.simulator.common.utils.BeanUtils;
-import com.payment.simulator.server.repository.DeleteActionRepository;
-import com.payment.simulator.server.repository.OldCacheRuleRepository;
-import com.payment.simulator.server.repository.QueryCacheActionRepository;
-import com.payment.simulator.server.repository.SaveActionRepository;
+import com.payment.simulator.server.repository.*;
 import com.payment.simulator.server.util.VelocityService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -51,6 +51,9 @@ public class CacheService {
 
     @Autowired
     private DeleteActionRepository deleteActionRepository;
+
+    @Autowired
+    private UpdateActionRepository updateActionRepository;
 
     @Autowired
     private SaveActionRepository saveActionRepository;
@@ -112,6 +115,78 @@ public class CacheService {
             return velocityService.assignValue(simulateContext, deleteAction.getResponse(), null);
         }else{
             return velocityService.assignValue(simulateContext, deleteAction.getNotfoundResponse(), null);
+        }
+    }
+
+    public String update(SimulateContext simulateContext, HitRule hitRule) {
+        UpdateAction updateAction = updateActionRepository.findById(hitRule.getActionId()).get();
+        if (updateAction == null) {
+            throw new SimulateException(SERVER_ERROR, "UpdateAction not found with id: " +  hitRule.getActionId());
+        }
+        String objectId = GroovyScriptEngine.generateObjectId(simulateContext, updateAction.getUpdateKeyScript());
+        String response = redisTemplate.boundValueOps(objectId).get();
+        if(StringUtils.isEmpty(response)){
+            return velocityService.assignValue(simulateContext, updateAction.getNotfoundResponse(), null);
+        }
+        
+        //update
+        if(simulateContext.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
+            redisTemplate.boundValueOps(objectId).set(getUpdatedJson(response, updateAction.getUpdateRule()));
+        }
+        if(simulateContext.getContentType().equals(MediaType.APPLICATION_XML_VALUE)){
+            redisTemplate.boundValueOps(objectId).set(getUpdatedXml(response, updateAction.getUpdateRule()));
+        }
+
+        return velocityService.assignValue(simulateContext, updateAction.getResponse(), null);
+    }
+
+    private String getUpdatedXml(String response, String updateRule) {
+        if (StringUtils.isBlank(response) || StringUtils.isBlank(updateRule)) {
+            return response;
+        }
+
+        try {
+            JSONObject rule = JSON.parseObject(updateRule);
+            String targetNode = "//" + rule.getString("targetNode").replace(".", "/");
+            String targetValue = rule.getString("targetValue");
+
+            Document document = DocumentHelper.parseText(response);
+            List<Node> nodes = document.selectNodes(targetNode);
+            for (Node node : nodes) {
+                node.setText(targetValue);
+            }
+
+            return document.asXML();
+        } catch (Exception e) {
+            log.error("Failed to update XML", e);
+            return response;
+        }
+    }
+
+    private String getUpdatedJson(String response, String updateRule) {
+        if (StringUtils.isBlank(response) || StringUtils.isBlank(updateRule)) {
+            return response;
+        }
+
+        try {
+            JSONObject jsonResponse = JSON.parseObject(response);
+            JSONObject rule = JSON.parseObject(updateRule);
+            String[] paths = rule.getString("targetNode").split("\\.");
+            String targetValue = rule.getString("targetValue");
+
+            JSONObject current = jsonResponse;
+            for (int i = 0; i < paths.length - 1; i++) {
+                current = current.getJSONObject(paths[i]);
+                if (current == null) {
+                    return response;
+                }
+            }
+
+            current.put(paths[paths.length - 1], targetValue);
+            return jsonResponse.toJSONString();
+        } catch (Exception e) {
+            log.error("Failed to update JSON", e);
+            return response;
         }
     }
 

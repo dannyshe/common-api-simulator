@@ -2,7 +2,7 @@ package com.payment.simulator.server.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.server.bo.SimulateContext;
-import com.payment.simulator.server.service.impl.SimulateService;
+import com.payment.simulator.server.service.SimulateService;
 import com.payment.simulator.server.util.BodyReaderHttpServletRequestWrapper;
 import com.payment.simulator.server.util.RequestParamsToMap;
 import com.payment.simulator.server.util.XmlTool;
