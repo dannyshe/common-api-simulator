@@ -1,4 +1,14 @@
-rootArtifactId: CHANNEL-MOCK
+rootArtifactId: API-SIMULATOR
+
+server:
+  port: 8081
+  tomcat:
+    max-threads: 800
+    min-spare-threads: 200
+    accesslog:
+      enabled: true
+      rotate: true
+      directory: ${logging.path}
 
 spring:
   application:
@@ -56,18 +66,7 @@ logging:
   file:
     path: ${user.home}/logs/${rootArtifactId}
   level:
-    com.payment.simulator: INFO
-
-
-server:
-  port: 10051
-  tomcat:
-    max-threads: 800
-    min-spare-threads: 200
-    accesslog:
-      enabled: true
-      rotate: true
-      directory: ${logging.path}
+    com.common.api.simulator: INFO
 
 management:
   security:
