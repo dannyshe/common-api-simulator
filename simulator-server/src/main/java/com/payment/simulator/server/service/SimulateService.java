@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.payment.simulator.server.bo.SimulateContext;
+import com.payment.simulator.server.dto.SimulateContext;
 import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.server.entity.HitRule;
 import com.payment.simulator.server.enums.ActionTypeEnum;

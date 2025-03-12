@@ -1,6 +1,6 @@
 package com.payment.simulator.server.template;
 
-import com.payment.simulator.server.bo.SimulateContext;
+import com.payment.simulator.server.dto.SimulateContext;
 import org.springframework.http.ResponseEntity;
 
 /**

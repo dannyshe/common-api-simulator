@@ -1,6 +1,6 @@
 package com.payment.simulator.server.engine;
 
-import com.payment.simulator.server.bo.SimulateContext;
+import com.payment.simulator.server.dto.SimulateContext;
 import com.payment.simulator.server.constant.Constant;
 import com.payment.simulator.common.exception.ErrorCode;
 import com.payment.simulator.common.exception.SimulateException;

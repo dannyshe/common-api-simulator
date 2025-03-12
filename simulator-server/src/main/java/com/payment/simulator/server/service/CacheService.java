@@ -3,15 +3,12 @@ package com.payment.simulator.server.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.common.exception.SimulateException;
-import com.payment.simulator.server.bo.CacheRuleBO;
-import com.payment.simulator.server.bo.SimulateContext;
+import com.payment.simulator.server.dto.SimulateContext;
 import com.payment.simulator.server.engine.GroovyScriptEngine;
 import com.payment.simulator.server.entity.*;
-import com.payment.simulator.common.utils.BeanUtils;
 import com.payment.simulator.server.repository.*;
 import com.payment.simulator.server.util.VelocityService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -21,9 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static com.payment.simulator.common.exception.ErrorCode.SERVER_ERROR;

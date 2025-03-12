@@ -1,4 +1,4 @@
-package com.payment.simulator.server.bo;
+package com.payment.simulator.server.dto;
 
 import com.alibaba.fastjson.JSONObject;
 import com.payment.simulator.server.constant.Constant;
