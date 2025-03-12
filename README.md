@@ -111,7 +111,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 ## How to test and verify
 
-[API-Simulator-Postman-Test-Script](./simulator-server/script/API-Simulator-Postman-Test-Script.json)
+<a href="./simulator-server/script/API-Simulator-Postman-Test-Script.json" download>API-Simulator-Postman-Test-Script</a>
 
 ## How to run
 
