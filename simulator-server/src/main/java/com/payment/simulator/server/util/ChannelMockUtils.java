@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-/**
- * 
- * @version 0.0.1
- * @date 2022/04/06
- */
 @Slf4j
 public class ChannelMockUtils {
 
@@ -35,32 +30,6 @@ public class ChannelMockUtils {
             }
         }
         return 0;
-    }
-
-    public static String paymentIdBuilder() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("pay_");
-        for (int i = 0; i < 26; i++) {
-            sb.append(RandomPos());
-        }
-        return sb.toString();
-    }
-
-    public static String refundActionIdBuilder() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("act_");
-        for (int i = 0; i < 26; i++) {
-            sb.append(RandomPos());
-        }
-        return sb.toString();
-    }
-
-    public static String idBuilder() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 15; i++) {
-            sb.append(RandomPos());
-        }
-        return sb.toString();
     }
 
     public static String idBuilder(int digit) {

@@ -17,11 +17,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * 
- * @version 0.0.1
- * @date 2022/04/06
- */
 @Component
 @Slf4j
 public class VelocityService {

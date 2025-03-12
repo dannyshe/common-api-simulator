@@ -36,12 +36,6 @@ public class ApiSimulatorServer {
         jackson2ObjectMapperBuilder.modulesToInstall(VavrModule.class);
     }
 
-//    @Bean
-//    public ObjectMapper jacksonBuilder() {
-//        ObjectMapper mapper = new ObjectMapper();
-//        return mapper.registerModule(new VavrModule());
-//    }
-
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info("application is up");
     }

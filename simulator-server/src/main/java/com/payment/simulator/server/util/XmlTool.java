@@ -6,11 +6,6 @@ import org.dom4j.*;
 
 import java.util.List;
 
-/**
- * xml工具类
- * 
- * @date 2016-09-13
- */
 public class XmlTool {
 
     /**

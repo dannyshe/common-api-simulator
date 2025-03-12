@@ -8,11 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-/**
- * 
- * @version 0.0.1
- * @date 2022/04/06
- */
 public class RequestParamsToMap {
     public static JSONObject getParameterMap(HttpServletRequest request) {
         Map<String, String[]> properties = request.getParameterMap();//把请求参数封装到Map<String, String[]>中
