@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 /**
  * 服务编码规范：
- * 1xxx: 代表支付平台错误
+ * 1xxx: 代表平台错误
  * 2xxx：代表业务方错误
  * 3xxx：代表风控错误
  * 4xxx: 渠道方错误
@@ -88,10 +88,6 @@ public enum ErrorCode {
     CHANNEL_RETURN_ERROR("4007","channel return error"),
     CHANNEL_FAILED("4008","channel failed"),
     CHANNEL_SIGN_ERROR("4009", "channel sign error");
-
-
-
-
 
 
     private String code;

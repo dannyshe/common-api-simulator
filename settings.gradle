@@ -4,4 +4,3 @@
 
 rootProject.name = 'common-api-simulator'
 include(':simulator-server')
-include(':simulator-common')

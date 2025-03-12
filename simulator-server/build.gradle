@@ -4,8 +4,6 @@ plugins {
 
 
 dependencies {
-    api project(':simulator-common')
-    
     // Spring Boot 相关依赖
     api 'org.springframework.boot:spring-boot-starter-web'
     api 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -15,6 +13,21 @@ dependencies {
     
     // Spring Cloud 相关
     api 'org.springframework.cloud:spring-cloud-commons:4.0.4'
+
+    // JSON 处理 - 更新 Jackson 相关依赖
+    api 'com.fasterxml.jackson.core:jackson-core:2.15.3'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.15.3'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.15.3'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.15.3'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.3'
+    api 'com.alibaba:fastjson:2.0.40'
+    api 'io.vavr:vavr-jackson:0.10.3'
+
+    // 工具库
+    api 'org.apache.commons:commons-lang3:3.13.0'
+    api 'commons-collections:commons-collections:3.2.2'
+    api 'commons-beanutils:commons-beanutils:1.9.4'
+    api 'com.google.guava:guava:32.1.2-jre'
     
     // Groovy 相关
     api 'org.codehaus.groovy:groovy:3.0.24'
