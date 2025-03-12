@@ -115,4 +115,4 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 ## How to run
 
-- TODO
+- TODO - will provide docker script soon
