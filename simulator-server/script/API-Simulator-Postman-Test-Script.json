@@ -1,0 +1,445 @@
+{
+	"info": {
+		"_postman_id": "67637ed2-f276-44b1-97e5-4cca08484341",
+		"name": "API Simulator - Demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14514597",
+		"_collection_link": "https://bold-star-852020.postman.co/workspace/mock~14ec8aa9-f013-4e32-8914-8a4ce2fd2b1c/collection/14514597-67637ed2-f276-44b1-97e5-4cca08484341?action=share&source=collection_link&creator=14514597"
+	},
+	"item": [
+		{
+			"name": "1, create payment",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// 解析响应体",
+							"const response = pm.response.json();",
+							"",
+							"// 验证 payment_order_id 不为空",
+							"const paymentOrderId = response.payment_order_id;",
+							"pm.test(\"payment_order_id is not empty\", function () {",
+							"    pm.expect(paymentOrderId).to.exist.and.not.be.empty;",
+							"});",
+							"",
+							"// 验证 status 是否为 Authorized",
+							"const status = response.status;",
+							"pm.test(\"status is Authorized\", function () {",
+							"    pm.expect(status).to.equal('Authorized');",
+							"});",
+							"",
+							"// 检查所有条件是否都满足",
+							"if (pm.response.code === 200 && paymentOrderId && paymentOrderId.length > 0 && status === 'Authorized') {",
+							"    console.log(\"Stimulate to create Stripe payment successfully\");",
+							"    // 将 paymentOrderId 的值写入变量",
+							"    pm.globals.set(\"paymentOrderId\", paymentOrderId);",
+							"     pm.environment.set(\"paymentOrderId\", paymentOrderId);",
+							"} else {",
+							"    console.log(\"Stimulate to create Stripe payment failed\");",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"source_type\": \"token\",\n  \"amount\": 5000,\n  \"currency\": \"USD\",\n  \"3ds\": {\n    \"enabled\": true\n  }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/payments/merchantId/M0001/token/tok_mbabizu24mvu3mela5njyhpit4",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"merchantId",
+						"M0001",
+						"token",
+						"tok_mbabizu24mvu3mela5njyhpit4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2, query payment - 1st time",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"paymentOrderId\",pm.globals.get(\"paymentOrderId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"1st query was successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// 解析响应体为 JSON 对象",
+							"const responseBody = pm.response.json();",
+							"",
+							"// 验证响应体中的 status 字段是否为 Authorized",
+							"pm.test(\"Response status is Authorized\", function () {",
+							"    pm.expect(responseBody.status).to.equal(\"Authorized\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/payments/{{paymentOrderId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"{{paymentOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3, capture payment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"paymentOrderId\",pm.globals.get(\"paymentOrderId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Payment Capture was successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-USER-ID",
+						"value": "62625df7d5893d0001f7ba32"
+					},
+					{
+						"key": "X-VERSION",
+						"value": "mock"
+					},
+					{
+						"key": "testMode",
+						"value": "true"
+					},
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"paymentOrderId\": \"{{paymentOrderId}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/payments/capture",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"capture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4, query payment - 2nd time - status changed",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"paymentOrderId\",pm.globals.get(\"paymentOrderId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"2nd query was successfully\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// 解析响应体为 JSON 对象",
+							"const responseBody = pm.response.json();",
+							"",
+							"// 验证响应体中的 status 字段是否为 Authorized",
+							"pm.test(\"Response status is Captured\", function () {",
+							"    pm.expect(responseBody.status).to.equal(\"Captured\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/payments/{{paymentOrderId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"{{paymentOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5, delete payment",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"paymentOrderId\",pm.globals.get(\"paymentOrderId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Payment was successfully deleted\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/payments/{{paymentOrderId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"{{paymentOrderId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "6, query payment - 3rd time - not found",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"paymentOrderId\",pm.globals.get(\"paymentOrderId\"));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Deleted payment can not be found(expected)', function () {",
+							"    const responseText = pm.response.text();",
+							"    pm.expect(responseText).to.include('not found');",
+							"});",
+							"console.log(\"11\");"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "channel_id",
+						"value": "stripe"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/payments/{{paymentOrderId}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"payments",
+						"{{paymentOrderId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "localhost:8081",
+			"type": "string"
+		},
+		{
+			"key": "paymentOrderId",
+			"value": "0",
+			"type": "string"
+		}
+	]
+}

@@ -59,14 +59,59 @@ When developing a payment gateway system, we can leverage sandbox environments f
 
 ![sequence](./design/3.png)
 
+## API
 
-## Testcase
+### Path
 
-- TODO
+- /\*\* (All paths)
 
-## How to run
+### HTTP Method
 
-- TODO
+All methods (GET, POST, PUT, DELETE, etc.)
+
+---
+
+### Request Requirements
+
+#### Headers
+
+
+| Header       | Required | Values                            |
+| ------------ | -------- | --------------------------------- |
+| channel_id   | Yes      | Any string                        |
+| Content-Type | Yes      | application/json, application/xml |
+
+---
+
+## Responses
+
+### Success Cases
+
+#### Case 1: Preconfigured 200/201 Status Code
+
+- **Status Code**: 200 or 201
+- **Content-Type**: Matches request's `Content-Type` header
+- **Body**: Dynamically generated JSON/XML from template
+- **Example**:
+  ```json
+  {"id": 123, "status": "processed"}
+  ```
+
+#### Case 2: Preconfigured Other Status Code (e.g., 404, 500)
+
+* **Status Code**: As configured (e.g., 404, 500)
+* **Body**: Empty
+
+#### Special Case: Simulated Timeout
+
+* **Behavior**: Delays response by preconfigured duration before returning
+* **Status Code**: As configured (200/201/other)
+* **Content-Type**: Matches request's `Content-Type`
+* **Example**: Sleep 5000ms → Return 200 OK
+
+## How to test and verify
+
+[API-Simulator-Postman-Test-Script](./script/API-Simulator-Postman-Test-Script.json)
 
 ## How to run
 
