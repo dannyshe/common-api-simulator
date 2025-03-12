@@ -57,7 +57,7 @@ When developing a payment gateway system, we can leverage sandbox environments f
 
 ## Sequence
 
-![sequence](./design/3.png)
+<img src="./design/3.png" alt="sequence" width="130%"/>
 
 ## API
 
@@ -111,7 +111,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 ## How to test and verify
 
-<a href="./simulator-server/script/API-Simulator-Postman-Test-Script.json" download>API-Simulator-Postman-Test-Script</a>
+[View API-Simulator-Postman-Test-Script](./simulator-server/script/API-Simulator-Postman-Test-Script.json)
 
 ## How to run
 
