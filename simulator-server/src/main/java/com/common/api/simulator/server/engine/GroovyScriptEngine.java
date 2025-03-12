@@ -45,7 +45,7 @@ public  class GroovyScriptEngine {
             return (String) ((Invocable) SCRIPT_ENGINE).invokeFunction(Constant.METHOD_NAME);
         } catch (ScriptException | NoSuchMethodException e) {
             log.info("executeGroovyScript script:{}",script);
-            throw new SimulateException(ErrorCode.SERVER_ERROR,"执行脚本异常");
+            throw new SimulateException(ErrorCode.SERVER_ERROR,"执行脚本异常:" + e.getMessage());
         }
     }
 

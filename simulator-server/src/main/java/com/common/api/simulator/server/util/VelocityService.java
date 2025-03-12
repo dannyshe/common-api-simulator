@@ -47,6 +47,8 @@ public class VelocityService {
         context.put("now", new Date());
         if(StringUtils.isNotBlank(id)) {
             context.put("id", id);
+        }else{
+            context.put("id", ObjectIdUitl.generateObjectId(simulateContext.getChannelId()));
         }
         context.put("date", new DateTool());
         context.put("uuid", UUID.randomUUID().toString());
