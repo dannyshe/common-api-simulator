@@ -113,7 +113,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 <img src="./design/4.png" alt="test cases"/>
 
-[View API-Simulator-Postman-Test-Script](./simulator-server/script/postman.json)
+[View postman script](./simulator-server/script/postman.json)
 
 
 ## How to run
