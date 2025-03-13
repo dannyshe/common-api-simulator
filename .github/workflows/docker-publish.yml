@@ -30,7 +30,7 @@ jobs:
       - name: Build with Gradle
         run: |
           cd simulator-server
-          ./gradlew build
+          ../gradlew build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
