@@ -109,7 +109,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 * **Content-Type**: Matches request's `Content-Type`
 * **Example**: Sleep 5000ms → Return 200 OK
 
-## How to test and verify
+## How to test and verify rules
 
 <img src="./design/4.png" alt="test cases"/>
 
