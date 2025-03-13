@@ -113,7 +113,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 <img src="./design/4.png" alt="test cases"/>
 
-[View API-Simulator-Postman-Test-Script](./simulator-server/script/API-Simulator-Postman-Test-Script.json)
+[View API-Simulator-Postman-Test-Script](./simulator-server/script/postman.json)
 
 
 ## How to run
@@ -128,4 +128,4 @@ docker-compose up -d
 docker exec -it {mysql container id} bash
 mysql -uadmin -p1111
   ```
-- step#3, use the postman script to test it from end to end using the demo rules. You can find the postman scriot [here](./simulator-server/script/API-Simulator-Postman-Test-Script.json)
+- step#3, use the postman script to test it from end to end using the demo rules. You can find the postman scriot [here](./simulator-server/script/postman.json)
