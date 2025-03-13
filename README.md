@@ -118,4 +118,14 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 ## How to run
 
-- TODO - will provide docker script soon
+- step#1，run the services with docker-compose.yml. Take care of the platform value, it depends on different machines.
+```
+docker-compose up -d
+  ```
+
+- step#2, create tables in mysql container, insert demo rules. You can find all the script [here](./simulator-server/script/database.sql)
+```
+docker exec -it {mysql container id} bash
+mysql -uadmin -p1111
+  ```
+- step#3, use the postman script to test it from end to end using the demo rules. You can find the postman scriot [here](./simulator-server/script/API-Simulator-Postman-Test-Script.json)
