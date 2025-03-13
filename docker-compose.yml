@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  api-simulator:
+    image: dannyshe/api-simulator:latest
+    platform: linux/amd64
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://local.middleware.com:3306/channel_mock?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false
+      - SPRING_DATASOURCE_USERNAME=admin
+      - SPRING_DATASOURCE_PASSWORD=1111
+      - SPRING_REDIS_HOST=local.middleware.com
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_DATABASE=0
+      - SPRING_REDIS_TIMEOUT=50000
+      - SPRING_REDIS_LETTUCE_POOL_MAX_ACTIVE=16
+      - SPRING_REDIS_LETTUCE_POOL_MAX_IDLE=8
+      - SPRING_REDIS_LETTUCE_POOL_MIN_IDLE=2
+      - SPRING_REDIS_LETTUCE_POOL_MAX_WAIT=50000
+    depends_on:
+      - mysql
+      - redis
+
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    hostname: local.middleware.com
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=channel_mock
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=1111
+      - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    platform: linux/amd64
+    hostname: local.middleware.com
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  default:
+    driver: bridge
