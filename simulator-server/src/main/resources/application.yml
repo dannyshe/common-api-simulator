@@ -42,7 +42,7 @@ spring:
         min-idle: 2
         max-wait: 50000ms
     database: 0
-    host: middleware.siupay.com
+    host: local.middleware.com
     port: 6379
     
   # 删除 redisson 配置部分
