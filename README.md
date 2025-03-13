@@ -118,7 +118,7 @@ All methods (GET, POST, PUT, DELETE, etc.)
 
 ## How to run
 
-- step#1，run the services with docker-compose.yml. Take care of the platform value, it depends on different machines.
+- step#1，run the services with docker-compose.yml. Take care of the platform value, it depends on machines.
 ```
 docker-compose up -d
   ```
