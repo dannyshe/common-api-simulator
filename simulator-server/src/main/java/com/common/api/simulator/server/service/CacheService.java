@@ -3,6 +3,7 @@ package com.common.api.simulator.server.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.common.api.simulator.common.exception.SimulateException;
+import com.common.api.simulator.server.util.RedisHelper;
 import com.common.api.simulator.server.dto.SimulateContext;
 import com.common.api.simulator.server.engine.GroovyScriptEngine;
 import com.common.api.simulator.server.entity.*;
@@ -17,12 +18,10 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Node;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static com.common.api.simulator.common.exception.ErrorCode.SERVER_ERROR;
 
@@ -39,7 +38,7 @@ public class CacheService {
     private VelocityService velocityService;
 
     @Autowired
-    protected RedisTemplate<String, String> redisTemplate;
+    private RedisHelper redisHelper;
 
     @Autowired
     private QueryCacheActionRepository queryCacheActionRepository;
@@ -70,7 +69,7 @@ public class CacheService {
         String response = velocityService.assignValue(simulateContext, hitRule.getResponse(), objectId);
         if (StringUtils.isNotEmpty(saveAction.getGenerateKeyScript()) && saveAction.getCacheTtlHours() > 0) {
             if (!StringUtils.isEmpty(objectId)) {
-                redisTemplate.boundValueOps(objectId).set(response, saveAction.getCacheTtlHours(), TimeUnit.HOURS);
+                redisHelper.setWithExpire(objectId, response, saveAction.getCacheTtlHours());
             }
         }
         return response;
@@ -82,7 +81,7 @@ public class CacheService {
             throw new SimulateException(SERVER_ERROR, "DeleteAction not found with id: " +  hitRule.getActionId());
         }
         String objectId = GroovyScriptEngine.generateObjectId(simulateContext, deleteAction.getDeleteKeyScript());
-        if(redisTemplate.delete(objectId)){
+        if(redisHelper.delete(objectId)){
             return velocityService.assignValue(simulateContext, deleteAction.getResponse(), null);
         }else{
             return velocityService.assignValue(simulateContext, deleteAction.getNotfoundResponse(), null);
@@ -95,17 +94,17 @@ public class CacheService {
             throw new SimulateException(SERVER_ERROR, "UpdateAction not found with id: " +  hitRule.getActionId());
         }
         String objectId = GroovyScriptEngine.generateObjectId(simulateContext, updateAction.getUpdateKeyScript());
-        String response = redisTemplate.boundValueOps(objectId).get();
+        String response = redisHelper.get(objectId);
         if(StringUtils.isEmpty(response)){
             return velocityService.assignValue(simulateContext, updateAction.getNotfoundResponse(), null);
         }
         
         //update
         if(simulateContext.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)){
-            redisTemplate.boundValueOps(objectId).set(getUpdatedJson(response, updateAction.getUpdateRule()));
+            redisHelper.udpate(objectId, getUpdatedJson(response, updateAction.getUpdateRule()));
         }
         if(simulateContext.getContentType().equals(MediaType.APPLICATION_XML_VALUE)){
-            redisTemplate.boundValueOps(objectId).set(getUpdatedXml(response, updateAction.getUpdateRule()));
+            redisHelper.udpate(objectId, getUpdatedXml(response, updateAction.getUpdateRule()));
         }
 
         return velocityService.assignValue(simulateContext, updateAction.getResponse(), null);
@@ -167,7 +166,7 @@ public class CacheService {
             throw new SimulateException(SERVER_ERROR, "QueryCacheAction not found with id: " +  hitRule.getActionId());
         }
         String objectId = GroovyScriptEngine.generateObjectId(simulateContext, queryCacheAction.getQueryKeyScript());
-        String response = redisTemplate.boundValueOps(objectId).get();
+        String response = redisHelper.get(objectId);
         if(StringUtils.isEmpty(response)){
             return velocityService.assignValue(simulateContext, queryCacheAction.getNotfoundResponse(), null);
         }
