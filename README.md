@@ -51,6 +51,9 @@ When developing a payment gateway system, we can leverage sandbox environments f
     - **Load Balancing**:
       - Employs NGINX as a load balancer to distribute traffic efficiently and ensure high availability.
 
+## Technologies
+- Utilize Spring boot, Redis, MySQL, Docker, Groovy, Velocity, etc.
+
 ## Usecase
 
 ![usecase](./design/1.png)
